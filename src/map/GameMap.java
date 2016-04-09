@@ -2,7 +2,6 @@ package map;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -21,12 +20,12 @@ public class GameMap extends JPanel {
      * Image of the wall
      */
     private BufferedImage originalImageWall;
-    
+
     /**
      * Image of the path
      */
     private BufferedImage originalImagePath;
-    
+
     /**
      * Image of the character
      */
@@ -84,35 +83,36 @@ public class GameMap extends JPanel {
     private void loadImage(String wall, String character, String path) throws IOException {
         File fileWall = new File(wall);
         originalImageWall = ImageIO.read(fileWall);
-        
+
         File fileCharacter = new File(character);
         originalImageCharacter = ImageIO.read(fileCharacter);
-        
+
         File filePath = new File(path);
         originalImagePath = ImageIO.read(filePath);
     }
 
     /**
      * children method of paintComponent for drawing board
+     *
      * @param g graphic context
      * @param xSize scale size of image (width)
      * @param ySize scale size of image (length)
      */
-    private void paintMap(Graphics g, int xSize, int ySize, Graphics2D gWall, Graphics2D gCharacter, Graphics2D gPath){
-        
-        for(int i = 0; i<boardMap.boardWidth;i++){
-            for(int j=0; j<boardMap.boardHeight;j++){
-                switch(boardMap.mapTable[j][i]){
-                    case("B"): //wall
-                          gWall.drawImage(originalImageWall, i*xSize, j*ySize, xSize, ySize, null);
+    private void paintMap(Graphics g, int xSize, int ySize, Graphics2D gWall, Graphics2D gCharacter, Graphics2D gPath) {
+
+        for (int i = 0; i < boardMap.boardHeight; i++) {
+            for (int j = 0; j < boardMap.boardWidth; j++) {
+                switch (boardMap.mapTable[i][j]) {
+                    case ("B"): //wall
+                        gWall.drawImage(originalImageWall, j * xSize, i * ySize, xSize, ySize, null);
                         break;
-                    case("P"): //path
-                        gPath.drawImage(originalImagePath, i*xSize, j*ySize, xSize, ySize, null);
+                    case ("P"): //path
+                        gPath.drawImage(originalImagePath, j * xSize, i * ySize, xSize, ySize, null);
                         break;
-                    case("C"): //character
-                        gCharacter.drawImage(originalImageCharacter, i*xSize, j*ySize, xSize, ySize, null);
+                    case ("C"): //character
+                        gCharacter.drawImage(originalImageCharacter, j * xSize, i * ySize, xSize, ySize, null);
                         break;
-                            
+
                 }
             }
         }
@@ -129,11 +129,9 @@ public class GameMap extends JPanel {
         panelWidth = getWidth();
         panelHeight = getHeight();
 
-        
         int xSize = panelWidth / (boardMap.boardWidth);
         int ySize = panelHeight / boardMap.boardHeight;
 
-        
         Graphics2D gWall = originalImageWall.createGraphics();
         Graphics2D gCharacter = originalImageCharacter.createGraphics();
         Graphics2D gPath = originalImagePath.createGraphics();
@@ -141,7 +139,7 @@ public class GameMap extends JPanel {
         gWall = (Graphics2D) g;
         gCharacter = (Graphics2D) g;
         gPath = (Graphics2D) g;
-        
+
         paintMap(g, xSize, ySize, gWall, gCharacter, gPath);
     }
 }
