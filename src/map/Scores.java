@@ -1,6 +1,7 @@
 package map;
 
 import java.awt.BorderLayout;
+import java.awt.Graphics;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -31,6 +32,15 @@ public class Scores extends JPanel{
         JButton temp = new JButton("temp");
         add(exitButton, BorderLayout.SOUTH);
         add(temp, BorderLayout.NORTH);
-
     }    
+
+
+    //TODO 
+    //add updating timer in the right corner of that panel
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g); //To change body of generated methods, choose Tools | Templates.
+        
+    }
+    
 }
