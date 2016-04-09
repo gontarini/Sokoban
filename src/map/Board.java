@@ -1,6 +1,5 @@
 package map;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -30,7 +29,7 @@ public class Board {
     /**
      * length of the board
      */
-    protected int boardLength;
+    protected int boardHeight;
     
     /**
      * path to the character image
@@ -54,14 +53,14 @@ public class Board {
         }
         
         boardWidth = Integer.parseInt(instanceProperties.getProperty("width"));
-        boardLength = Integer.parseInt(instanceProperties.getProperty("length"));
+        boardHeight = Integer.parseInt(instanceProperties.getProperty("length"));
         wallPath = instanceProperties.getProperty("wall");
         characterPath = instanceProperties.getProperty("character");
         
-        mapTable = new String[boardWidth][boardLength];
+        mapTable = new String[boardWidth][boardHeight];
 
         for(int i = 0 ; i < boardWidth; i++){
-            for(int j = 0; j < boardLength; j++){
+            for(int j = 0; j < boardHeight; j++){
                 mapTable[i][j]=instanceProperties.getProperty(i+"_"+j);
             }
         }

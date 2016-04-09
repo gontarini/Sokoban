@@ -3,112 +3,139 @@ package map;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 /**
  * <h1>Game board</h1>
  * Class specifying outlook of the game board
+ *
  * @author Pawel and Marcin
  */
-public class GameMap extends JPanel{
-    
+public class GameMap extends JPanel {
+
     /**
      * Image of the wall
      */
     private BufferedImage originalImageWall;
     
     /**
+     * Image of the character
+     */
+    private BufferedImage originalImageCharacter;
+
+    /**
      * configurations of the Panel read from file
      */
-    private Board boardMap; //added in order to see board configurations in paint method
-    
+    private Board boardMap;
+
     /**
      * panel width
      */
-    private int panelWidth; //added
+    private int panelWidth;
     /**
-     * panel lenght
+     * panel length
      */
-    private int panelLength; //added
+    private int panelHeight;
     /**
      * Image of the character
      */
     private Image characterImage;
+
     /**
      * constructor
+     *
      * @param level
      */
-    public GameMap(int level){
+    public GameMap(int level) {
         initialize(level);
     }
-    
+
     /**
-     * load map configurations
-     * initialze JPanel object with an image
+     * load map configurations initialize JPanel object with an image
+     *
      * @param level
      */
-    private void initialize(int level){
+    private void initialize(int level) {
         boardMap = new Board();
-        try{
+        try {
             boardMap.load(level);
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        try{
-            loadImage(boardMap.wallPath,boardMap.characterPath);        
-        }
-        catch(IOException e){
+
+        try {
+            loadImage(boardMap.wallPath, boardMap.characterPath);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * load specified images
+     *
      * @param wall
-     * @param character 
+     * @param character
      */
-    private void loadImage(String wall, String character) throws IOException{               
+    private void loadImage(String wall, String character) throws IOException {
         File fileWall = new File(wall);
         originalImageWall = ImageIO.read(fileWall);
+        
+        File fileCharacter = new File(character);
+        originalImageCharacter = ImageIO.read(fileCharacter);
     }
-    
+
     /**
-     * resizing image 
-     * @param originalImage
-     * @param width
-     * @param height
-     * @return resized image
+     * children method of paintComponent for drawing board
+     * @param g graphic context
+     * @param xSize scale size of image (width)
+     * @param ySize scale size of image (length)
      */
-    private BufferedImage resizeImage(BufferedImage originalImage, int width, int height){
-        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.SCALE_SMOOTH);
-        return resizedImage;
+    private void paintMap(Graphics g, int xSize, int ySize, Graphics2D gWall, Graphics2D gCharacter, Graphics2D gPath){
+        
+        for(int i = 0; i<boardMap.boardWidth;i++){
+            for(int j=0; j<boardMap.boardHeight;j++){
+                switch(boardMap.mapTable[j][i]){
+                    case("B"): //wall
+                          gWall.drawImage(originalImageWall, i*xSize, j*ySize, xSize, ySize, null);
+                        break;
+                    case("P"): //path
+                        gCharacter.drawImage(originalImageCharacter, i*xSize, j*ySize, xSize, ySize, null);
+                        break;
+                    case("C"): //character
+                        break;
+                            
+                }
+            }
+        }
     }
 
     /**
      * override paintComponent method
+     *
      * @param g instance of Graphic class
      */
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g); 
+        super.paintComponent(g);
         panelWidth = getWidth();
-        panelLength = getHeight();
+        panelHeight = getHeight();
+
         
-        int xSize = panelWidth/(boardMap.boardWidth);
-        int ySize = panelLength/boardMap.boardLength;
-               
-        BufferedImage resizedImageWall = resizeImage(originalImageWall,xSize,ySize);
-        Graphics2D g2 = resizedImageWall.createGraphics();
+        int xSize = panelWidth / (boardMap.boardWidth);
+        int ySize = panelHeight / boardMap.boardHeight;
+
         
-        g2 = (Graphics2D) g;
-        g2.drawImage(originalImageWall, 0, 0,xSize,ySize,null);
-        g2.dispose();
+        Graphics2D gWall = originalImageWall.createGraphics();
+        
+        Graphics2D gCharacter = originalImageCharacter.createGraphics();
+
+        gWall = (Graphics2D) g;
+        gCharacter = (Graphics2D) g;
+        
+        paintMap(g, xSize, ySize, gWall, gCharacter, gCharacter);
     }
 }
