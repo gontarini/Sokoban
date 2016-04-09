@@ -1,8 +1,8 @@
 length=4
 width=4
-wall=/home/marcin/NetBeansProjects/Sokoban/sciana.jpg
-character=/home/marcin/NetBeansProjects/Sokoban/character.jpeg
-path=/home/marcin/NetBeansProjects/Sokoban/path.JPG
+wall=sciana.jpg
+character=character.jpeg
+path=path.JPG
 0_0=B
 0_1=B
 0_2=B
