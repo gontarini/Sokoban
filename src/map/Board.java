@@ -17,6 +17,11 @@ public class Board {
     protected String wallPath;
     
     /**
+     *  path to path image
+     */
+    protected String pathPath;
+    
+    /**
      * two-dimensional table containing map configuration
      */
     protected String[][] mapTable;
@@ -56,6 +61,7 @@ public class Board {
         boardHeight = Integer.parseInt(instanceProperties.getProperty("length"));
         wallPath = instanceProperties.getProperty("wall");
         characterPath = instanceProperties.getProperty("character");
+        pathPath = instanceProperties.getProperty("path");
         
         mapTable = new String[boardWidth][boardHeight];
 
