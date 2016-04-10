@@ -2,6 +2,7 @@ package map;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -72,6 +73,62 @@ public class Board {
             for (int j = 0; j < boardWidth; j++) {
                 mapTable[i][j] = instanceProperties.getProperty(i + "_" + j);
             }
+        }
+
+    }
+
+    /**
+     * creator of simple map
+     *
+     * @param x
+     * @param y
+     */
+    public static void writeSimpleBoard(int x, int y) {
+
+        String height = "height=" + y + "\n";
+        String width = "width=" + x + "\n";
+        String wall = "wall=sciana.jpg" + "\n";
+        String character = "character=superman.gif" + "\n";
+        String path = "path=path.JPG" + "\n";
+
+        try {
+            FileOutputStream fos = new FileOutputStream("2.txt");
+            fos.write(height.getBytes());
+            fos.write(width.getBytes());
+            fos.write(wall.getBytes());
+            fos.write(character.getBytes());
+            fos.write(path.getBytes());
+
+            for (int i = 0; i < x; i++) {
+                for (int j = 0; j < y; j++) {
+                    if (i == 0 || j == 0 || i == x - 1 || j == y - 1) {
+
+                        String s = j + "_" + i + "=B\n";
+                        fos.write(s.getBytes());
+                    } //    do serduszków                
+                    //else if((Math.pow(i*i+j*j-1,3)-i*i*j*j*j)==0){
+                    //                        String s = j+"_"+i+"=P\n";
+                    //                    fos.write(s.getBytes());
+                    //                    }
+                    else if((i==x/2|| i==x/2-1) && (j==y/2||j==y/2-1)){
+                        String s = j+"_"+i+"=B\n";
+                    fos.write(s.getBytes());
+                    }
+                    else if(i==2&&j==2){
+                        String s = j+"_"+i+"=C\n";
+                    fos.write(s.getBytes());
+                    }
+                    else {
+                        String s = j + "_" + i + "=P\n";
+                        fos.write(s.getBytes());
+                    }
+
+                }
+            }
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+
         }
 
     }
