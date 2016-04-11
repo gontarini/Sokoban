@@ -45,6 +45,9 @@ public class GameMap extends JPanel {
      */
     private int panelHeight;
 
+    /**
+     * image of the character
+     */
     private Image characterImage; //temporary animation
 
     /**
@@ -93,7 +96,8 @@ public class GameMap extends JPanel {
     }
 
     /**
-     * children method of paintComponent for drawing board
+     * children method of paintComponent for drawing "B" - load image of wall
+     * "P" - load image of path "C" - load image of character
      *
      * @param g graphic context
      * @param xSize scale size of image (width)
@@ -114,7 +118,7 @@ public class GameMap extends JPanel {
                         if (characterImage != null) {
                             g.drawImage(characterImage, j * xSize, i * ySize, xSize, ySize, this);
                         } // przekazuje Image z normalnym kontekstem graficznym i wkazanie na jakiś domyślny ImageObserver
-                          // czy jakoś tak, on chyba kontroluje poprawne wyświetlanie gifa
+                        // czy jakoś tak, on chyba kontroluje poprawne wyświetlanie gifa
                         break;
 
                 }

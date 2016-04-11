@@ -18,8 +18,8 @@ public class Game {
      */
     public static void main(String[] args) throws IOException {
 
-        Board.writeSimpleBoard(10,10);
-        
+        Board.writeSimpleBoard(10, 10);
+
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
