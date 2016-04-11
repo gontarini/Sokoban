@@ -1,7 +1,8 @@
 package map;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -26,11 +27,10 @@ public class GameMap extends JPanel {
      */
     private BufferedImage originalImagePath;
 
-    /**
-     * Image of the character
-     */
-    private BufferedImage originalImageCharacter;
-
+//    /**
+//     * Image of the character                     w zasadzie sprawa chyba niepotrzebna
+//     */                                              ale się może przydać do statycznego obrazka
+//    private BufferedImage originalImageCharacter;
     /**
      * configurations of the Panel read from file
      */
@@ -44,6 +44,8 @@ public class GameMap extends JPanel {
      * panel length
      */
     private int panelHeight;
+
+    private Image characterImage; //temporary animation
 
     /**
      * constructor
@@ -84,8 +86,7 @@ public class GameMap extends JPanel {
         File fileWall = new File(wall);
         originalImageWall = ImageIO.read(fileWall);
 
-        File fileCharacter = new File(character);
-        originalImageCharacter = ImageIO.read(fileCharacter);
+        characterImage = Toolkit.getDefaultToolkit().createImage(character); //tutaj zrobilem inne wczytywanie 
 
         File filePath = new File(path);
         originalImagePath = ImageIO.read(filePath);
@@ -98,19 +99,22 @@ public class GameMap extends JPanel {
      * @param xSize scale size of image (width)
      * @param ySize scale size of image (length)
      */
-    private void paintMap(Graphics g, int xSize, int ySize, Graphics2D gWall, Graphics2D gCharacter, Graphics2D gPath) {
+    private void paintMap(Graphics g, int xSize, int ySize) {
 
         for (int i = 0; i < boardMap.boardHeight; i++) {
             for (int j = 0; j < boardMap.boardWidth; j++) {
                 switch (boardMap.mapTable[i][j]) {
                     case ("B"): //wall
-                        gWall.drawImage(originalImageWall, j * xSize, i * ySize, xSize, ySize, null);
+                        g.drawImage(originalImageWall, j * xSize, i * ySize, xSize, ySize, null);
                         break;
                     case ("P"): //path
-                        gPath.drawImage(originalImagePath, j * xSize, i * ySize, xSize, ySize, null);
+                        g.drawImage(originalImagePath, j * xSize, i * ySize, xSize, ySize, null);
                         break;
                     case ("C"): //character
-                        gCharacter.drawImage(originalImageCharacter, j * xSize, i * ySize, xSize, ySize, null);
+                        if (characterImage != null) {
+                            g.drawImage(characterImage, j * xSize, i * ySize, xSize, ySize, this);
+                        } // przekazuje Image z normalnym kontekstem graficznym i wkazanie na jakiś domyślny ImageObserver
+                          // czy jakoś tak, on chyba kontroluje poprawne wyświetlanie gifa
                         break;
 
                 }
@@ -132,14 +136,6 @@ public class GameMap extends JPanel {
         int xSize = panelWidth / (boardMap.boardWidth);
         int ySize = panelHeight / boardMap.boardHeight;
 
-        Graphics2D gWall = originalImageWall.createGraphics();
-        Graphics2D gCharacter = originalImageCharacter.createGraphics();
-        Graphics2D gPath = originalImagePath.createGraphics();
-
-        gWall = (Graphics2D) g;
-        gCharacter = (Graphics2D) g;
-        gPath = (Graphics2D) g;
-
-        paintMap(g, xSize, ySize, gWall, gCharacter, gPath);
+        paintMap(g, xSize, ySize);
     }
 }

@@ -110,15 +110,13 @@ public class Board {
                     //                        String s = j+"_"+i+"=P\n";
                     //                    fos.write(s.getBytes());
                     //                    }
-                    else if((i==x/2|| i==x/2-1) && (j==y/2||j==y/2-1)){
-                        String s = j+"_"+i+"=B\n";
-                    fos.write(s.getBytes());
-                    }
-                    else if(i==2&&j==2){
-                        String s = j+"_"+i+"=C\n";
-                    fos.write(s.getBytes());
-                    }
-                    else {
+                    else if ((i == x / 2 || i == x / 2 - 1) && (j == y / 2 || j == y / 2 - 1)) {
+                        String s = j + "_" + i + "=B\n";
+                        fos.write(s.getBytes());
+                    } else if (i == 2 && j == 2) {
+                        String s = j + "_" + i + "=C\n";
+                        fos.write(s.getBytes());
+                    } else {
                         String s = j + "_" + i + "=P\n";
                         fos.write(s.getBytes());
                     }
