@@ -31,7 +31,7 @@ public class GameFrame extends JFrame {
      * initialize frame
      */
     private void initialize() {
-        gameMap = new GameMap(1); // temporar parameter indicates map level
+        gameMap = new GameMap(2); // temporar parameter indicates map level
         scores = new Scores();
 
         add(gameMap, BorderLayout.CENTER);
