@@ -1,9 +1,11 @@
 package sokoban;
 
+
 import java.awt.EventQueue;
 import java.io.IOException;
 import map.Board;
 import map.GameFrame;
+import menu.MainMenu;
 
 /**
  *
@@ -23,8 +25,10 @@ public class Game {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                GameFrame game = new GameFrame();
-                game.setVisible(true);
+//                GameFrame game = new GameFrame();
+                
+                MainMenu menu = new MainMenu();
+                menu.setVisible(true);
             }
         });
 
