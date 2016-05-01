@@ -2,6 +2,8 @@ package map;
 
 import java.awt.BorderLayout;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -29,6 +31,12 @@ public class Scores extends JPanel {
      */
     private void initialize() {
         exitButton = new JButton("Exit");
+        
+        exitButton.addActionListener(new ActionListener(){
+        public void actionPerformed(ActionEvent e){
+            System.exit(0);
+        }
+    });
 
         setLayout(new BorderLayout());
         JButton temp = new JButton("temp");
