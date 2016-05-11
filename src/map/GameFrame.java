@@ -42,7 +42,6 @@ public class GameFrame extends JFrame {
         setTitle("Sokoban");
         setSize(330, 330);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
     }
 
 }
