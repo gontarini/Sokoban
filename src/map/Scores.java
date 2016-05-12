@@ -30,13 +30,8 @@ public class Scores extends JPanel {
      * initialize the score panel
      */
     private void initialize() {
-        exitButton = new JButton("Exit");
-        
-        exitButton.addActionListener(new ActionListener(){
-        public void actionPerformed(ActionEvent e){
-            System.exit(0);
-        }
-    });
+        exitButton = new JButton("EXIT");
+        exitButton.setActionCommand("EXIT");
 
         setLayout(new BorderLayout());
         JButton temp = new JButton("temp");
@@ -50,6 +45,10 @@ public class Scores extends JPanel {
     public void paint(Graphics g) {
         super.paint(g); //To change body of generated methods, choose Tools | Templates.
 
+    }
+    
+    public void addListener(ActionListener listener){
+        exitButton.addActionListener(listener);
     }
 
 }

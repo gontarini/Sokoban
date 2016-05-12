@@ -1,6 +1,9 @@
 package map;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 
 /**
@@ -42,6 +45,16 @@ public class GameFrame extends JFrame {
         setTitle("Sokoban");
         setSize(330, 330);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        addWindowFocusListener(new WindowAdapter() {
+    public void windowGainedFocus(WindowEvent e) {
+        gameMap.requestFocusInWindow();
+    }
+});
     }
 
+    public void addListener(ActionListener listener){
+        scores.addListener(listener);
+    }
+    
 }

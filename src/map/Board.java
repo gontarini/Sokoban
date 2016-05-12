@@ -43,7 +43,27 @@ public class Board {
      * path to the character image
      */
     protected String characterPath;
-
+    
+    /**
+     * path to the ball image
+     */
+    protected String ballPath;
+    
+    /**
+     * path to the hole image
+     */
+    protected String holePath;
+    
+    /**
+     * path to the end image
+     */
+    protected String endPath;
+    
+    /**
+     * path to the boleHall image
+     */
+    protected String ballHolePath;
+    
     /**
      * Loading map configuration from the specified file
      *
@@ -66,6 +86,10 @@ public class Board {
         wallPath = instanceProperties.getProperty("wall");
         characterPath = instanceProperties.getProperty("character");
         pathPath = instanceProperties.getProperty("path");
+        ballPath = instanceProperties.getProperty("ball");
+        holePath = instanceProperties.getProperty("hole");
+        endPath = instanceProperties.getProperty("end");
+        ballHolePath = instanceProperties.getProperty("ballHole");
 
         mapTable = new String[boardHeight][boardWidth];
 
@@ -103,15 +127,11 @@ public class Board {
                 for (int j = 0; j < y; j++) {
                     if (i == 0 || j == 0 || i == x - 1 || j == y - 1) {
 
-                        String s = j + "_" + i + "=B\n";
+                        String s = j + "_" + i + "=W\n";
                         fos.write(s.getBytes());
-                    } //    do serduszków                
-                    //else if((Math.pow(i*i+j*j-1,3)-i*i*j*j*j)==0){
-                    //                        String s = j+"_"+i+"=P\n";
-                    //                    fos.write(s.getBytes());
-                    //                    }
+                    }
                     else if ((i == x / 2 || i == x / 2 - 1) && (j == y / 2 || j == y / 2 - 1)) {
-                        String s = j + "_" + i + "=B\n";
+                        String s = j + "_" + i + "=W\n";
                         fos.write(s.getBytes());
                     } else if (i == 2 && j == 2) {
                         String s = j + "_" + i + "=C\n";

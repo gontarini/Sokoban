@@ -35,12 +35,24 @@ public class Controller implements ActionListener {
         game = refGame;
         
         menu.addListener(this);
+        game.addListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String s = e.getActionCommand();
-        System.out.println(s);
+        String command = e.getActionCommand();
+        
+        if(command.equals("PLAY")){
+            menu.setVisible(false);
+            game.setVisible(true);
+        }
+        else if(command.equals("LIST")){
+            
+        }
+        else if(command.equals("EXIT")){
+            game.setVisible(false);
+            menu.setVisible(true);
+        }
     }
     
     

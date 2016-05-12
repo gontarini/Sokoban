@@ -3,9 +3,12 @@ package map;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Vector;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
@@ -15,7 +18,7 @@ import javax.swing.JPanel;
  *
  * @author Pawel and Marcin
  */
-public class GameMap extends JPanel {
+public class GameMap extends JPanel implements KeyListener{
 
     /**
      * Image of the wall
@@ -26,11 +29,40 @@ public class GameMap extends JPanel {
      * Image of the path
      */
     private BufferedImage originalImagePath;
+    
+    /**
+     * Image of the ball
+     */
+    private BufferedImage originalImageBall;
+    
+    /**
+     * Image of the hole
+     */
+    private BufferedImage originalImageHole;
+    
+    /**
+     * Image of the end
+     */
+    private BufferedImage originalImageEnd;
+    
+    /**
+     * location of the character
+     */
+    private ObjectLocation characterLocation;
+    
+    /**
+     * Image of the ballHole
+     */
+    private BufferedImage originalImageBallHole;
 
-//    /**
-//     * Image of the character                     w zasadzie sprawa chyba niepotrzebna
-//     */                                              ale się może przydać do statycznego obrazka
-//    private BufferedImage originalImageCharacter;
+    /**
+     * flag, which is true if character is standing on the hole
+     */
+    private boolean characterBall;
+    
+    /**
+     * flag which is true if character moved
+     */
     /**
      * configurations of the Panel read from file
      */
@@ -71,21 +103,30 @@ public class GameMap extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        
         try {
-            loadImage(boardMap.wallPath, boardMap.characterPath, boardMap.pathPath);
+            loadImage(boardMap.wallPath, boardMap.characterPath, boardMap.pathPath, boardMap.ballPath, boardMap.holePath, boardMap.ballHolePath);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        
+        addKeyListener(this);
+        
+        if(isFocusable() == true){
+            System.out.println("slucham");
         }
     }
 
     /**
-     * load specified images
-     *
+     * load images of objects
      * @param wall
      * @param character
+     * @param path
+     * @param ball
+     * @param hole
+     * @param ballHole
      */
-    private void loadImage(String wall, String character, String path) throws IOException {
+    private void loadImage(String wall, String character, String path, String ball, String hole, String ballHole) throws IOException {
         File fileWall = new File(wall);
         originalImageWall = ImageIO.read(fileWall);
 
@@ -93,11 +134,21 @@ public class GameMap extends JPanel {
 
         File filePath = new File(path);
         originalImagePath = ImageIO.read(filePath);
+        
+        File fileBall = new File(ball);
+        originalImageBall = ImageIO.read(fileBall);
+        
+        File fileHole = new File(hole);
+        originalImageHole = ImageIO.read(fileHole);
+        
+        File fileBallHole = new File(ballHole);
+        originalImageBallHole = ImageIO.read(fileBallHole);
     }
 
     /**
-     * children method of paintComponent for drawing "B" - load image of wall
-     * "P" - load image of path "C" - load image of character
+     * children method of paintComponent for drawing "W" - load image of wall,
+     * "P" - load image of path, "C" - load image of character, "B" - load image of ball,
+     * "H" - load image of hole, "BH" - load image of ballHole
      *
      * @param g graphic context
      * @param xSize scale size of image (width)
@@ -108,7 +159,7 @@ public class GameMap extends JPanel {
         for (int i = 0; i < boardMap.boardHeight; i++) {
             for (int j = 0; j < boardMap.boardWidth; j++) {
                 switch (boardMap.mapTable[i][j]) {
-                    case ("B"): //wall
+                    case ("W"): //wall
                         g.drawImage(originalImageWall, j * xSize, i * ySize, xSize, ySize, null);
                         break;
                     case ("P"): //path
@@ -117,8 +168,17 @@ public class GameMap extends JPanel {
                     case ("C"): //character
                         if (characterImage != null) {
                             g.drawImage(characterImage, j * xSize, i * ySize, xSize, ySize, this);
-                        } // przekazuje Image z normalnym kontekstem graficznym i wkazanie na jakiś domyślny ImageObserver
-                        // czy jakoś tak, on chyba kontroluje poprawne wyświetlanie gifa
+                        }
+                        characterLocation = new ObjectLocation(i,j);
+                        break;
+                    case("B"): //ball
+                        g.drawImage(originalImageBall, j*xSize, i*ySize, xSize, ySize, null);
+                        break;
+                    case("H"): //hole
+                        g.drawImage(originalImageHole, j*xSize, i*ySize, xSize, ySize, null);
+                        break;
+                    case("BH"): //ballHole
+                        g.drawImage(originalImageBallHole, j*xSize, i*ySize, xSize, ySize, null);
                         break;
 
                 }
@@ -141,5 +201,86 @@ public class GameMap extends JPanel {
         int ySize = panelHeight / boardMap.boardHeight;
 
         paintMap(g, xSize, ySize);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        
+            if(isFocusable() == true){
+            System.out.println("slucham");
+        }
+        int x,y;
+        System.out.println("wlazlem");
+        switch(e.getKeyCode()){
+                case(KeyEvent.VK_UP):
+                    x = characterLocation.getX();
+                    y = characterLocation.getY();
+                    
+                    if("P".equals(boardMap.mapTable[x-1][y])){
+                        characterLocation.set(x-1, y);
+                        boardMap.mapTable[x][y] = "P";
+                        boardMap.mapTable[x-1][y] = "C";
+                        repaint();
+                        break;
+                    }
+                    else if("B".equals(boardMap.mapTable[x-1][y])){
+                        if("P".equals(boardMap.mapTable[x-2][y])){
+                            characterLocation.set(x-1, y);
+                            boardMap.mapTable[x][y] = "P";
+                            boardMap.mapTable[x-1][y] = "C";
+                            boardMap.mapTable[x-2][y] = "B";
+                            repaint();
+                            break;
+                        }
+                        else if("H".equals(boardMap.mapTable[x-2][y])){
+                            characterLocation.set(x-1,y);
+                            boardMap.mapTable[x][y] = "P";
+                            boardMap.mapTable[x-1][y] = "C";
+                            boardMap.mapTable[x-2][y] = "BH";
+                            repaint();
+                            break;
+                        }
+                        else break;
+                    }
+                    else if("H".equals(boardMap.mapTable[x-1][y])){
+                        characterLocation.set(x-1,y);
+                        boardMap.mapTable[x][y] = "P";
+                        boardMap.mapTable[x-1][y] = "C";
+                        characterBall = true;
+                        repaint();
+                        break;
+                    }
+                    else if("BH".equals(boardMap.mapTable[x-1][y])){
+                        if("P".equals(boardMap.mapTable[x-2][y])){
+                            characterLocation.set(x-1, y);
+                            boardMap.mapTable[x][y] = "P";
+                            boardMap.mapTable[x-1][y] = "C";
+                            boardMap.mapTable[x-2][y] = "B";
+                            characterBall = true;
+                            repaint();
+                            break;
+                        }
+                        else if("H".equals(boardMap.mapTable[x-2][y])){
+                            characterLocation.set(x-1,y);
+                            boardMap.mapTable[x][y] = "P";
+                            boardMap.mapTable[x-1][y] = "C";
+                            boardMap.mapTable[x-2][y] = "BH";
+                            characterBall = true;
+                            repaint();
+                            break;
+                        }
+                        else break;
+                    }
+                        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        
     }
 }

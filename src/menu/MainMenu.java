@@ -1,6 +1,5 @@
 package menu;
 
-
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,74 +8,61 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /**
- *<h1>MainMenu</h1>
+ * <h1>MainMenu</h1>
  * class implementing main GUI interface
+ *
  * @author pawel
  */
-public class MainMenu extends JFrame  {
-        
+public class MainMenu extends JFrame {
+
     /**
      * Shows game board on click
-    */
+     */
     public JButton playButton;
-    
+
     /**
      * Close whole program
      */
     private JButton exitButton;
-    
+
     /**
      * List previous scores
-    */
+     */
     private JButton listButton;
     
-    public MainMenu(){
+    public MainMenu() {
         initialize();
     }
     
-    private void initialize(){
+    private void initialize() {
         playButton = new JButton();
         exitButton = new JButton();
         listButton = new JButton();
-                  
+        
         playButton.setText("PLAY");
         exitButton.setText("EXIT");
-        listButton.setText("LIST SCORES");
+        listButton.setText("SCORES");
         
         playButton.setActionCommand("PLAY");
         exitButton.setActionCommand("EXIT");
         listButton.setActionCommand("LIST");
         
-//        playButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//           
-//            }
-//        });
-        
-        listButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                  }
-        });
-        
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-             System.exit(0);
+                System.exit(0);
             }
         });
         
-              
         setTitle("SOKOBAN");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(300,300);
+        setSize(300, 300);
         setLocationRelativeTo(null);
         
         FlowLayout layout = new FlowLayout(100, 10, 10);
         
         JPanel panel = new JPanel(layout);
-                
+        
         panel.add(playButton);
         panel.add(exitButton);
         panel.add(listButton);
@@ -87,11 +73,9 @@ public class MainMenu extends JFrame  {
         setVisible(true);
     }
     
-    public void addListener(ActionListener listener){
-            playButton.addActionListener(listener);
+    public void addListener(ActionListener listener) {
+        playButton.addActionListener(listener);
+        listButton.addActionListener(listener);
     }
     
-    
-        
-    }
-    
+}
