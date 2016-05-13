@@ -8,7 +8,6 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
@@ -58,11 +57,7 @@ public class GameMap extends JPanel implements KeyListener{
     /**
      * flag, which is true if character is standing on the hole
      */
-    private boolean characterBall;
     
-    /**
-     * flag which is true if character moved
-     */
     /**
      * configurations of the Panel read from file
      */
@@ -166,9 +161,7 @@ public class GameMap extends JPanel implements KeyListener{
                         g.drawImage(originalImagePath, j * xSize, i * ySize, xSize, ySize, null);
                         break;
                     case ("C"): //character
-                        if (characterImage != null) {
-                            g.drawImage(characterImage, j * xSize, i * ySize, xSize, ySize, this);
-                        }
+                        boardMap.mapTable[i][j] = "P";
                         characterLocation = new ObjectLocation(i,j);
                         break;
                     case("B"): //ball
@@ -201,6 +194,9 @@ public class GameMap extends JPanel implements KeyListener{
         int ySize = panelHeight / boardMap.boardHeight;
 
         paintMap(g, xSize, ySize);
+         if (characterImage != null) {
+                            g.drawImage(characterImage, characterLocation.getY() * xSize, characterLocation.getX() * ySize, xSize, ySize, this);
+                        }
     }
 
     @Override
@@ -223,24 +219,20 @@ public class GameMap extends JPanel implements KeyListener{
                     
                     if("P".equals(boardMap.mapTable[x-1][y])){
                         characterLocation.set(x-1, y);
-                        boardMap.mapTable[x][y] = "P";
-                        boardMap.mapTable[x-1][y] = "C";
                         repaint();
                         break;
                     }
                     else if("B".equals(boardMap.mapTable[x-1][y])){
                         if("P".equals(boardMap.mapTable[x-2][y])){
                             characterLocation.set(x-1, y);
-                            boardMap.mapTable[x][y] = "P";
-                            boardMap.mapTable[x-1][y] = "C";
+                            boardMap.mapTable[x-1][y] = "P";
                             boardMap.mapTable[x-2][y] = "B";
                             repaint();
                             break;
                         }
                         else if("H".equals(boardMap.mapTable[x-2][y])){
                             characterLocation.set(x-1,y);
-                            boardMap.mapTable[x][y] = "P";
-                            boardMap.mapTable[x-1][y] = "C";
+                            boardMap.mapTable[x-1][y] = "P";
                             boardMap.mapTable[x-2][y] = "BH";
                             repaint();
                             break;
@@ -249,32 +241,180 @@ public class GameMap extends JPanel implements KeyListener{
                     }
                     else if("H".equals(boardMap.mapTable[x-1][y])){
                         characterLocation.set(x-1,y);
-                        boardMap.mapTable[x][y] = "P";
-                        boardMap.mapTable[x-1][y] = "C";
-                        characterBall = true;
                         repaint();
                         break;
                     }
                     else if("BH".equals(boardMap.mapTable[x-1][y])){
                         if("P".equals(boardMap.mapTable[x-2][y])){
                             characterLocation.set(x-1, y);
-                            boardMap.mapTable[x][y] = "P";
-                            boardMap.mapTable[x-1][y] = "C";
+                           boardMap.mapTable[x-1][y] = "H";
                             boardMap.mapTable[x-2][y] = "B";
-                            characterBall = true;
                             repaint();
                             break;
                         }
                         else if("H".equals(boardMap.mapTable[x-2][y])){
                             characterLocation.set(x-1,y);
-                            boardMap.mapTable[x][y] = "P";
-                            boardMap.mapTable[x-1][y] = "C";
+                           boardMap.mapTable[x-1][y] = "H";
                             boardMap.mapTable[x-2][y] = "BH";
-                            characterBall = true;
                             repaint();
                             break;
                         }
                         else break;
+                    }
+                    else {
+                        break;
+                    }
+                case(KeyEvent.VK_RIGHT):
+                      x = characterLocation.getX();
+                    y = characterLocation.getY();
+                    
+                    if("P".equals(boardMap.mapTable[x][y+1])){
+                        characterLocation.set(x, y+1);
+                        repaint();
+                        break;
+                    }
+                    else if("B".equals(boardMap.mapTable[x][y+1])){
+                        if("P".equals(boardMap.mapTable[x][y+2])){
+                            characterLocation.set(x, y+1);
+                            boardMap.mapTable[x][y+1] = "P";
+                            boardMap.mapTable[x][y+2] = "B";
+                            repaint();
+                            break;
+                        }
+                        else if("H".equals(boardMap.mapTable[x][y+2])){
+                            characterLocation.set(x,y+1);
+                            boardMap.mapTable[x][y+1] = "P";
+                            boardMap.mapTable[x][y+2] = "BH";
+                            repaint();
+                            break;
+                        }
+                        else break;
+                    }
+                    else if("H".equals(boardMap.mapTable[x][y+1])){
+                        characterLocation.set(x,y+1);
+                        repaint();
+                        break;
+                    }
+                    else if("BH".equals(boardMap.mapTable[x][y+1])){
+                        if("P".equals(boardMap.mapTable[x][y+2])){
+                            characterLocation.set(x, y+1);
+                           boardMap.mapTable[x][y+1] = "H";
+                            boardMap.mapTable[x][y+2] = "B";
+                            repaint();
+                            break;
+                        }
+                        else if("H".equals(boardMap.mapTable[x][y+2])){
+                            characterLocation.set(x,y+1);
+                          boardMap.mapTable[x][y+1] = "H";
+                            boardMap.mapTable[x][y+2] = "BH";
+                            repaint();
+                            break;
+                        }
+                        else break;
+                    }
+                    else {
+                        break;
+                    }
+                case(KeyEvent.VK_DOWN):
+                     x = characterLocation.getX();
+                    y = characterLocation.getY();
+                    
+                    if("P".equals(boardMap.mapTable[x+1][y])){
+                        characterLocation.set(x+1, y);
+                        repaint();
+                        break;
+                    }
+                    else if("B".equals(boardMap.mapTable[x+1][y])){
+                        if("P".equals(boardMap.mapTable[x+2][y])){
+                            characterLocation.set(x+1, y);
+                            boardMap.mapTable[x+1][y] = "P";
+                            boardMap.mapTable[x+2][y] = "B";
+                            repaint();
+                            break;
+                        }
+                        else if("H".equals(boardMap.mapTable[x+2][y])){
+                            characterLocation.set(x+1,y);
+                            boardMap.mapTable[x+1][y] = "P";
+                            boardMap.mapTable[x+2][y] = "BH";
+                            repaint();
+                            break;
+                        }
+                        else break;
+                    }
+                    else if("H".equals(boardMap.mapTable[x+1][y])){
+                        characterLocation.set(x+1,y);
+                        repaint();
+                        break;
+                    }
+                    else if("BH".equals(boardMap.mapTable[x+1][y])){
+                        if("P".equals(boardMap.mapTable[x+2][y])){
+                            characterLocation.set(x+1, y);
+                            boardMap.mapTable[x+1][y] = "H";
+                            boardMap.mapTable[x+2][y] = "B";
+                            repaint();
+                            break;
+                        }
+                        else if("H".equals(boardMap.mapTable[x+2][y])){
+                            characterLocation.set(x+1,y);
+                            boardMap.mapTable[x+2][y] = "BH";
+                            repaint();
+                            break;
+                        }
+                        else break;
+                    }
+                    else {
+                        break;
+                    }
+                case(KeyEvent.VK_LEFT):
+                     x = characterLocation.getX();
+                    y = characterLocation.getY();
+                    
+                    if("P".equals(boardMap.mapTable[x][y-1])){
+                        characterLocation.set(x, y-1);
+                        repaint();
+                        break;
+                    }
+                    else if("B".equals(boardMap.mapTable[x][y-1])){
+                        if("P".equals(boardMap.mapTable[x][y-2])){
+                            characterLocation.set(x, y-1);
+                            boardMap.mapTable[x][y-1] = "P";
+                            boardMap.mapTable[x][y-2] = "B";
+                            repaint();
+                            break;
+                        }
+                        else if("H".equals(boardMap.mapTable[x][y-2])){
+                            characterLocation.set(x,y-1);
+                            boardMap.mapTable[x][y-1] = "P";
+                            boardMap.mapTable[x][y-2] = "BH";
+                            repaint();
+                            break;
+                        }
+                        else break;
+                    }
+                    else if("H".equals(boardMap.mapTable[x][y-1])){
+                        characterLocation.set(x,y-1);
+                        repaint();
+                        break;
+                    }
+                    else if("BH".equals(boardMap.mapTable[x][y-1])){
+                        if("P".equals(boardMap.mapTable[x][y-2])){
+                            characterLocation.set(x, y-1);
+                            boardMap.mapTable[x][y-1] = "H";
+                            boardMap.mapTable[x][y-2] = "B";
+                            repaint();
+                            break;
+                        }
+                        else if("H".equals(boardMap.mapTable[x][y-2])){
+                            characterLocation.set(x,y-1);
+                            boardMap.mapTable[x][y-1] = "H";
+                            boardMap.mapTable[x][y-2] = "BH";
+                            repaint();
+                            break;
+                        }
+                        else break;
+                    }
+                    else {
+                        break;
                     }
                         }
     }
