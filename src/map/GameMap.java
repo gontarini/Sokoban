@@ -82,7 +82,7 @@ public class GameMap extends JPanel implements KeyListener{
      *
      * @param level
      */
-    public GameMap(int level) {
+    public GameMap(String level) {
         initialize(level);
     }
 
@@ -91,7 +91,7 @@ public class GameMap extends JPanel implements KeyListener{
      *
      * @param level
      */
-    private void initialize(int level) {
+    private void initialize(String level) {
         boardMap = new Board();
         try {
             boardMap.load(level);
@@ -423,4 +423,5 @@ public class GameMap extends JPanel implements KeyListener{
     public void keyReleased(KeyEvent e) {
         
     }
+    
 }

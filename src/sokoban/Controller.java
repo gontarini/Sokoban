@@ -28,32 +28,27 @@ public class Controller implements ActionListener {
      * game
      *
      * @param refMenu reference to MainMenu object
-     * @param refGame reference to GameFrame object
      */
-    public Controller(MainMenu refMenu, GameFrame refGame) {
+    public Controller(MainMenu refMenu) {
         menu = refMenu;
-        game = refGame;
-        
         menu.addListener(this);
-        game.addListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        
-        if(command.equals("PLAY")){
+
+        if (command.equals("PLAY")) {
             menu.setVisible(false);
+            game = new GameFrame(menu.getLevel());
+            game.addListener(this);
             game.setVisible(true);
-        }
-        else if(command.equals("LIST")){
-            
-        }
-        else if(command.equals("EXIT")){
-            game.setVisible(false);
+        } else if (command.equals("LIST")) {
+
+        } else if (command.equals("EXIT")) {
             menu.setVisible(true);
+            game.dispose();
         }
     }
-    
-    
+
 }

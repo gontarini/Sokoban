@@ -25,11 +25,10 @@ public class Game {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                GameFrame game = new GameFrame();
+
                 
                 MainMenu menu = new MainMenu();
-                
-                Controller controller = new Controller(menu,game);
+                Controller controller = new Controller(menu);
             }
         });
 

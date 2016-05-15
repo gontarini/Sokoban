@@ -70,8 +70,8 @@ public class Board {
      * @param levelNumber level number to load from file
      * @throws java.io.FileNotFoundException
      */
-    public void load(int levelNumber) throws FileNotFoundException, IOException {
-        String filePath = levelNumber + ".txt";
+    public void load(String levelNumber) throws FileNotFoundException, IOException {
+        String filePath = levelNumber;
         Properties instanceProperties = new Properties();
         FileInputStream reader = new FileInputStream(filePath);
 
