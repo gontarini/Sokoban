@@ -72,7 +72,6 @@ public class MainMenu extends JFrame {
         pack();
         setVisible(true);
     }
-    
     public void addListener(ActionListener listener) {
         playButton.addActionListener(listener);
         listButton.addActionListener(listener);
