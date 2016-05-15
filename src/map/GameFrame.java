@@ -25,16 +25,19 @@ public class GameFrame extends JFrame {
 
     /**
      * constructor
+     *
+     * @param level
      */
-    public GameFrame() {
-        initialize();
+    public GameFrame(String level) {
+        initialize(level);
     }
 
     /**
-     * initialize frame
+     *
+     * @param level
      */
-    private void initialize() {
-        gameMap = new GameMap(2); // temporar parameter indicates map level
+    private void initialize(String level) {
+        gameMap = new GameMap(level); 
         scores = new Scores();
 
         add(gameMap, BorderLayout.CENTER);
@@ -45,16 +48,16 @@ public class GameFrame extends JFrame {
         setTitle("Sokoban");
         setSize(330, 330);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
         addWindowFocusListener(new WindowAdapter() {
-    public void windowGainedFocus(WindowEvent e) {
-        gameMap.requestFocusInWindow();
-    }
-});
+            public void windowGainedFocus(WindowEvent e) {
+                gameMap.requestFocusInWindow();
+            }
+        });
     }
 
-    public void addListener(ActionListener listener){
+    public void addListener(ActionListener listener) {
         scores.addListener(listener);
     }
-    
+
 }

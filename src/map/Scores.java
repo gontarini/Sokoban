@@ -34,9 +34,7 @@ public class Scores extends JPanel {
         exitButton.setActionCommand("EXIT");
 
         setLayout(new BorderLayout());
-        JButton temp = new JButton("temp");
         add(exitButton, BorderLayout.SOUTH);
-        add(temp, BorderLayout.NORTH);
     }
 
     //TODO 

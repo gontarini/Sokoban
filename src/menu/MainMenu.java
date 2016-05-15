@@ -1,11 +1,17 @@
 package menu;
 
+import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  * <h1>MainMenu</h1>
@@ -29,52 +35,118 @@ public class MainMenu extends JFrame {
      * List previous scores
      */
     private JButton listButton;
+
+    /**
+     * Combo box of available levels
+     */
+    private LevelSelection levelSelction;
+
+    /**
+     * Select level button
+     */
+    private JButton selectLevelButton;
+
+    /**
+     * pane to scroll list of levels
+     */
+    private JScrollPane levelPane;
     
+    /**
+     * Combo Box with available levels
+     */
+    private JComboBox levelBox;
+    
+    /**
+     * class constructor
+     */
     public MainMenu() {
-        initialize();
+        try {
+            initialize();
+        } catch (IOException ex) {
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
-    private void initialize() {
-        playButton = new JButton();
-        exitButton = new JButton();
+
+    /**
+     *
+     * @throws IOException
+     */
+    private void initialize() throws IOException {
+        selectLevelButton = new JButton();
         listButton = new JButton();
-        
+        exitButton = new JButton();
+
+        playButton = new JButton();
         playButton.setText("PLAY");
+
+        selectLevelButton.setText("SELECT LEVEL");
         exitButton.setText("EXIT");
         listButton.setText("SCORES");
-        
+
         playButton.setActionCommand("PLAY");
+
+        selectLevelButton.setActionCommand("SELECT");
         exitButton.setActionCommand("EXIT");
         listButton.setActionCommand("LIST");
-        
+
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
-        
+
         setTitle("SOKOBAN");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 300);
         setLocationRelativeTo(null);
-        
-        FlowLayout layout = new FlowLayout(100, 10, 10);
-        
-        JPanel panel = new JPanel(layout);
-        
-        panel.add(playButton);
+        this.setLayout(new BorderLayout());
+
+        FlowLayout flow = new FlowLayout();
+        BorderLayout border = new BorderLayout();
+
+        //panel with buttons
+        JPanel panel = new JPanel(flow);
+
+        //panel with comboBox
+        JPanel panel2 = new JPanel(border);
+        panel2.setVisible(false);
+
+        panel.add(selectLevelButton);
         panel.add(exitButton);
         panel.add(listButton);
-        
-        add(panel);
-        
+
+        add(panel, BorderLayout.NORTH);
+
+        levelSelction = new LevelSelection();
+        levelBox = new JComboBox(levelSelction);
+        levelBox.setSelectedIndex(0);
+
+        levelPane = new JScrollPane(levelBox);
+
+        panel2.add(levelPane, BorderLayout.NORTH);
+        panel2.add(playButton, BorderLayout.SOUTH);
+
+        selectLevelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panel2.setVisible(true);
+                pack();
+            }
+        });
+
+        add(panel2, BorderLayout.CENTER);
+
         pack();
         setVisible(true);
     }
+
     public void addListener(ActionListener listener) {
         playButton.addActionListener(listener);
         listButton.addActionListener(listener);
     }
     
+    public String getLevel(){
+        return (String) levelBox.getItemAt(levelBox.getSelectedIndex());
+    }
 }
