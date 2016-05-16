@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -111,7 +112,12 @@ public class MainMenu extends JFrame {
         //panel with comboBox
         JPanel panel2 = new JPanel(border);
         panel2.setVisible(false);
-
+        
+        //panel with list of scores
+        JPanel panel3 = new JPanel(border);
+        JLabel listLabel = new JLabel("List of recent scores");
+        
+        
         panel.add(selectLevelButton);
         panel.add(exitButton);
         panel.add(listButton);
@@ -126,16 +132,31 @@ public class MainMenu extends JFrame {
 
         panel2.add(levelPane, BorderLayout.NORTH);
         panel2.add(playButton, BorderLayout.SOUTH);
-
+       
         selectLevelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                add(panel2, BorderLayout.CENTER);
                 panel2.setVisible(true);
+                panel3.setVisible(false);
                 pack();
             }
         });
 
-        add(panel2, BorderLayout.CENTER);
+        panel3.add(listLabel,BorderLayout.CENTER);
+        panel3.setVisible(false);
+        
+        listButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                add(panel3,BorderLayout.CENTER);
+                panel3.setVisible(true);
+                panel2.setVisible(false);
+                pack();
+            }
+        });
+        
+        
 
         pack();
         setVisible(true);

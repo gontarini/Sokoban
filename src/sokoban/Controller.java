@@ -44,7 +44,8 @@ public class Controller implements ActionListener {
             game.addListener(this);
             game.setVisible(true);
         } else if (command.equals("LIST")) {
-
+            
+            
         } else if (command.equals("EXIT")) {
             menu.setVisible(true);
             game.dispose();
