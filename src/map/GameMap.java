@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -11,10 +13,13 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 /**
  * <h1>Game board</h1>
@@ -80,6 +85,13 @@ public class GameMap extends JPanel implements KeyListener {
      * image of the character
      */
     private Image characterImage; //temporary animation
+
+    private float progressHeight = 0.0f;
+    private int xSize, ySize;
+    private final int animationTime = 1000;
+    private final int frameNumber = 30;
+    private final int delay = animationTime / frameNumber;
+    private boolean flag = false;
 
     /**
      * constructor
@@ -195,13 +207,15 @@ public class GameMap extends JPanel implements KeyListener {
         panelWidth = getWidth();
         panelHeight = getHeight();
 
-        int xSize = panelWidth / (boardMap.boardWidth);
-        int ySize = panelHeight / boardMap.boardHeight;
+        xSize = panelWidth / (boardMap.boardWidth);
+        ySize = panelHeight / boardMap.boardHeight;
+
+        int dx = (int) progressHeight;
 
         paintMap(g, xSize, ySize);
 
         if (characterImage != null) {
-            g.drawImage(characterImage, characterLocation.getY() * xSize, characterLocation.getX() * ySize, xSize, ySize, this);
+            g.drawImage(characterImage, characterLocation.getY() * xSize, characterLocation.getX() * ySize + dx, xSize, ySize, this);
         }
     }
 
@@ -322,8 +336,13 @@ public class GameMap extends JPanel implements KeyListener {
                 y = characterLocation.getY();
 
                 if ("P".equals(boardMap.mapTable[x + 1][y])) {
-                    characterLocation.set(x + 1, y);
-                    repaint();
+                    animate();
+//                    if (flag == true) {
+//                        characterLocation.set(x + 1, y);
+//                        repaint();
+//                        flag = false;
+//                    }
+
                     break;
                 } else if ("B".equals(boardMap.mapTable[x + 1][y])) {
                     if ("P".equals(boardMap.mapTable[x + 2][y])) {
@@ -437,6 +456,34 @@ public class GameMap extends JPanel implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
 
+    }
+
+    private int i = 1;
+
+    ;
+    private void animate() {
+
+        Timer timer = new Timer(15, null);
+
+        timer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                float interval = (float) (1.0 / (float) 15);
+                progressHeight += interval * (float) (xSize);
+                System.out.println(progressHeight);
+                i++;
+                repaint();
+                if (i == 15) {
+                    timer.stop();
+                    progressHeight = 0;
+                    i = 1;
+                    flag = true;
+                    characterLocation.set(characterLocation.getX() + 1, characterLocation.getY());
+                        repaint();
+                }
+            }
+        });
+        timer.start();
     }
 
 }
