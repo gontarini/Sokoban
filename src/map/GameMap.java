@@ -237,9 +237,6 @@ public class GameMap extends JPanel implements KeyListener {
 
         paintMap(g, xSize, ySize);
 
-        System.out.println("ycharacter= " + characterLocation.getY());
-        System.out.println("xcharacter= " + characterLocation.getX());
-
         if (characterImage != null) {
             g.drawImage(characterImage, characterLocation.getY() * xSize + dy, characterLocation.getX() * ySize + dx, xSize, ySize, this);
             if (ballFlag == true) {
