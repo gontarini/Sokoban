@@ -106,7 +106,7 @@ public class GameMap extends JPanel implements KeyListener {
      * flag that turns listener off if move is done
      */
     private boolean flag = false;
-    
+
     /**
      * flag that turns drawing ball on
      */
@@ -116,8 +116,9 @@ public class GameMap extends JPanel implements KeyListener {
      * current locations of the moving ball
      */
     private int xBall, yBall;
-    
-    
+
+    private int dx, dy;
+
     /**
      * constructor
      *
@@ -147,10 +148,6 @@ public class GameMap extends JPanel implements KeyListener {
         }
 
         addKeyListener(this);
-
-        if (isFocusable() == true) {
-            System.out.println("slucham");
-        }
     }
 
     /**
@@ -235,17 +232,27 @@ public class GameMap extends JPanel implements KeyListener {
         xSize = panelWidth / (boardMap.boardWidth);
         ySize = panelHeight / boardMap.boardHeight;
 
-        int dx = (int) progressHeight;
-        int dy = (int) progressWidth;
+        dx = (int) progressHeight;
+        dy = (int) progressWidth;
+
+        System.out.println("dx= " + dx);
+        System.out.println("dy= " + dy);
+        System.out.println("ysize= " + ySize);
+        System.out.println("xsize= " + xSize);
+      
 
         paintMap(g, xSize, ySize);
+        
+          System.out.println("ycharacter= " + characterLocation.getY());
+        System.out.println("xcharacter= " + characterLocation.getX());
 
         if (characterImage != null) {
             g.drawImage(characterImage, characterLocation.getY() * xSize + dy, characterLocation.getX() * ySize + dx, xSize, ySize, this);
+            if (ballFlag == true) {
+                g.drawImage(originalImageBall, yBall * xSize + dy, xBall * ySize + dx, xSize, ySize, null);
+            }
         }
-        else if(ballFlag == true){
-            g.drawImage(originalImageBall, xBall*xSize + dy, yBall*ySize + dx, xSize, ySize, this);
-        }
+
     }
 
     @Override
@@ -258,7 +265,6 @@ public class GameMap extends JPanel implements KeyListener {
 
         if (flag == false) {
             int x, y;
-            System.out.println("wlazlem");
             switch (e.getKeyCode()) {
                 case (KeyEvent.VK_UP):
                     x = characterLocation.getX();
@@ -270,8 +276,11 @@ public class GameMap extends JPanel implements KeyListener {
                     } else if ("B".equals(boardMap.mapTable[x - 1][y])) {
                         if ("P".equals(boardMap.mapTable[x - 2][y])) {
 
-                            boardMap.mapTable[x - 1][y] = "P";
-                            boardMap.mapTable[x - 2][y] = "B";
+                            ballFlag = true;
+                            xBall = x - 1;
+                            yBall = y;
+                            //boardMap.mapTable[x - 1][y] = "P";
+                            // boardMap.mapTable[x - 2][y] = "B";
                             animate(e);
                             break;
                         } else if ("H".equals(boardMap.mapTable[x - 2][y])) {
@@ -481,7 +490,6 @@ public class GameMap extends JPanel implements KeyListener {
 
         flag = true;
         Timer timer = new Timer(frameNumber, null);
-
         timer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -490,22 +498,27 @@ public class GameMap extends JPanel implements KeyListener {
                 switch (typed.getKeyCode()) {
                     case (KeyEvent.VK_UP):
 
-                        progressHeight += -interval * (float) (xSize);
-                        System.out.println(progressHeight);
+                        progressHeight += -interval * (float) (ySize);
                         i++;
                         repaint();
-                        if (i == frameNumber) {
+                        if (i==frameNumber) {
                             timer.stop();
                             progressHeight = 0;
+                            dx = 0;
+
                             i = 1;
                             characterLocation.set(characterLocation.getX() - 1, characterLocation.getY());
                             flag = false;
+                            if (ballFlag == true) {
+                                ballFlag = false;
+                                boardMap.mapTable[xBall][yBall] = "P";
+                                boardMap.mapTable[xBall - 1][yBall] = "B";
+                            }
                         }
                         break;
 
                     case (KeyEvent.VK_DOWN):
-                        progressHeight += interval * (float) (xSize);
-                        System.out.println(progressHeight);
+                        progressHeight += interval * (float) (ySize);
                         i++;
                         repaint();
                         if (i == frameNumber) {
@@ -519,11 +532,10 @@ public class GameMap extends JPanel implements KeyListener {
 
                     case (KeyEvent.VK_RIGHT):
 
-                        progressWidth += interval * (float) (ySize);
-                        System.out.println(progressWidth);
+                        progressWidth += interval * (float) (xSize);
                         i++;
                         repaint();
-                        if (i == frameNumber) {
+                        if (i==frameNumber) {
                             timer.stop();
                             progressWidth = 0;
                             i = 1;
@@ -534,8 +546,7 @@ public class GameMap extends JPanel implements KeyListener {
 
                     case (KeyEvent.VK_LEFT):
 
-                        progressWidth += -interval * (float) (ySize);
-                        System.out.println(progressWidth);
+                        progressWidth += -interval * (float) (xSize);
                         i++;
                         repaint();
                         if (i == frameNumber) {
