@@ -235,15 +235,9 @@ public class GameMap extends JPanel implements KeyListener {
         dx = (int) progressHeight;
         dy = (int) progressWidth;
 
-        System.out.println("dx= " + dx);
-        System.out.println("dy= " + dy);
-        System.out.println("ysize= " + ySize);
-        System.out.println("xsize= " + xSize);
-      
-
         paintMap(g, xSize, ySize);
-        
-          System.out.println("ycharacter= " + characterLocation.getY());
+
+        System.out.println("ycharacter= " + characterLocation.getY());
         System.out.println("xcharacter= " + characterLocation.getX());
 
         if (characterImage != null) {
@@ -501,7 +495,7 @@ public class GameMap extends JPanel implements KeyListener {
                         progressHeight += -interval * (float) (ySize);
                         i++;
                         repaint();
-                        if (i==frameNumber) {
+                        if (i == frameNumber) {
                             timer.stop();
                             progressHeight = 0;
                             dx = 0;
@@ -535,7 +529,7 @@ public class GameMap extends JPanel implements KeyListener {
                         progressWidth += interval * (float) (xSize);
                         i++;
                         repaint();
-                        if (i==frameNumber) {
+                        if (i == frameNumber) {
                             timer.stop();
                             progressWidth = 0;
                             i = 1;

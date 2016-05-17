@@ -37,7 +37,7 @@ public class GameFrame extends JFrame {
      * @param level
      */
     private void initialize(String level) {
-        gameMap = new GameMap(level); 
+        gameMap = new GameMap(level);
         scores = new Scores();
 
         add(gameMap, BorderLayout.CENTER);

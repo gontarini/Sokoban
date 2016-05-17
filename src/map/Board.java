@@ -43,32 +43,32 @@ public class Board {
      * path to the character image
      */
     protected String characterPath;
-    
+
     /**
      * path to the ball image
      */
     protected String ballPath;
-    
+
     /**
      * path to the hole image
      */
     protected String holePath;
-    
+
     /**
      * path to the end image
      */
     protected String endPath;
-    
+
     /**
      * path to the boleHall image
      */
     protected String ballHolePath;
-    
+
     /**
      * number of balls in the game
      */
     protected int ballNumber;
-    
+
     /**
      * Loading map configuration from the specified file
      *
@@ -101,7 +101,7 @@ public class Board {
         for (int i = 0; i < boardHeight; i++) {
             for (int j = 0; j < boardWidth; j++) {
                 mapTable[i][j] = instanceProperties.getProperty(i + "_" + j);
-                if("B".equals(mapTable[i][j])){
+                if ("B".equals(mapTable[i][j])) {
                     ballNumber++;
                 }
             }
@@ -137,8 +137,7 @@ public class Board {
 
                         String s = j + "_" + i + "=W\n";
                         fos.write(s.getBytes());
-                    }
-                    else if ((i == x / 2 || i == x / 2 - 1) && (j == y / 2 || j == y / 2 - 1)) {
+                    } else if ((i == x / 2 || i == x / 2 - 1) && (j == y / 2 || j == y / 2 - 1)) {
                         String s = j + "_" + i + "=W\n";
                         fos.write(s.getBytes());
                     } else if (i == 2 && j == 2) {

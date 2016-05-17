@@ -51,12 +51,12 @@ public class MainMenu extends JFrame {
      * pane to scroll list of levels
      */
     private JScrollPane levelPane;
-    
+
     /**
      * Combo Box with available levels
      */
     private JComboBox levelBox;
-    
+
     /**
      * class constructor
      */
@@ -112,12 +112,11 @@ public class MainMenu extends JFrame {
         //panel with comboBox
         JPanel panel2 = new JPanel(border);
         panel2.setVisible(false);
-        
+
         //panel with list of scores
         JPanel panel3 = new JPanel(border);
         JLabel listLabel = new JLabel("List of recent scores");
-        
-        
+
         panel.add(selectLevelButton);
         panel.add(exitButton);
         panel.add(listButton);
@@ -132,7 +131,7 @@ public class MainMenu extends JFrame {
 
         panel2.add(levelPane, BorderLayout.NORTH);
         panel2.add(playButton, BorderLayout.SOUTH);
-       
+
         selectLevelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -143,20 +142,18 @@ public class MainMenu extends JFrame {
             }
         });
 
-        panel3.add(listLabel,BorderLayout.CENTER);
+        panel3.add(listLabel, BorderLayout.CENTER);
         panel3.setVisible(false);
-        
+
         listButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                add(panel3,BorderLayout.CENTER);
+                add(panel3, BorderLayout.CENTER);
                 panel3.setVisible(true);
                 panel2.setVisible(false);
                 pack();
             }
         });
-        
-        
 
         pack();
         setVisible(true);
@@ -166,8 +163,8 @@ public class MainMenu extends JFrame {
         playButton.addActionListener(listener);
         listButton.addActionListener(listener);
     }
-    
-    public String getLevel(){
+
+    public String getLevel() {
         return (String) levelBox.getItemAt(levelBox.getSelectedIndex());
     }
 }

@@ -1,10 +1,7 @@
 package sokoban;
 
-
 import java.awt.EventQueue;
 import java.io.IOException;
-import map.Board;
-import map.GameFrame;
 import menu.MainMenu;
 
 /**
@@ -20,8 +17,7 @@ public class Game {
      */
     public static void main(String[] args) throws IOException {
 
-       // Board.writeSimpleBoard(10, 10);
-
+        // Board.writeSimpleBoard(10, 10);
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {

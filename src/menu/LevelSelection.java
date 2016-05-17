@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 
 /**
  * <h1>Level selection</h1>
@@ -14,7 +13,7 @@ import javax.swing.JComboBox;
  *
  * @author pawel and Marcin
  */
-public class LevelSelection extends DefaultComboBoxModel{
+public class LevelSelection extends DefaultComboBoxModel {
 
     /**
      * path to the file which stores game levels
@@ -30,18 +29,17 @@ public class LevelSelection extends DefaultComboBoxModel{
      * list of available levels
      */
     private ArrayList levelList; // to delete
-    
+
 //    private DefaultComboBoxModel dftModel;
-    
-    
-    public LevelSelection() throws IOException {       
-        readData();     
+    public LevelSelection() throws IOException {
+        readData();
     }
 
     /**
      * read data and invoke method which creates ComboBox
+     *
      * @throws FileNotFoundException
-     * @throws IOException 
+     * @throws IOException
      */
     private void readData() throws FileNotFoundException, IOException {
         Properties instanceProperties = new Properties();
@@ -52,18 +50,20 @@ public class LevelSelection extends DefaultComboBoxModel{
         } finally {
             reader.close();
         }
-        
+
         levelAmount = Integer.parseInt(instanceProperties.getProperty("Amount"));
         makeBox(instanceProperties);
 
     }
+
     /**
      * fills ComboBox with data
+     *
      * @param prop properties instance which includes data to add
      */
-    private void makeBox(Properties prop){
-        
-        for( int i = 1; i <=levelAmount; i++){
+    private void makeBox(Properties prop) {
+
+        for (int i = 1; i <= levelAmount; i++) {
             this.addElement((prop.getProperty(String.valueOf(i))));
         }
     }

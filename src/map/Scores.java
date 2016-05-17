@@ -2,7 +2,6 @@ package map;
 
 import java.awt.BorderLayout;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -44,8 +43,8 @@ public class Scores extends JPanel {
         super.paint(g); //To change body of generated methods, choose Tools | Templates.
 
     }
-    
-    public void addListener(ActionListener listener){
+
+    public void addListener(ActionListener listener) {
         exitButton.addActionListener(listener);
     }
 
