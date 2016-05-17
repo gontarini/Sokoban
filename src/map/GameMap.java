@@ -106,7 +106,18 @@ public class GameMap extends JPanel implements KeyListener {
      * flag that turns listener off if move is done
      */
     private boolean flag = false;
+    
+    /**
+     * flag that turns drawing ball on
+     */
+    private boolean ballFlag = false;
 
+    /**
+     * current locations of the moving ball
+     */
+    private int xBall, yBall;
+    
+    
     /**
      * constructor
      *
@@ -231,6 +242,9 @@ public class GameMap extends JPanel implements KeyListener {
 
         if (characterImage != null) {
             g.drawImage(characterImage, characterLocation.getY() * xSize + dy, characterLocation.getX() * ySize + dx, xSize, ySize, this);
+        }
+        else if(ballFlag == true){
+            g.drawImage(originalImageBall, xBall*xSize + dy, yBall*ySize + dx, xSize, ySize, this);
         }
     }
 
