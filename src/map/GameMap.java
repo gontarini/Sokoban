@@ -8,13 +8,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -160,7 +156,7 @@ public class GameMap extends JPanel implements KeyListener {
         File fileWall = new File(wall);
         originalImageWall = ImageIO.read(fileWall);
 
-        characterImage = Toolkit.getDefaultToolkit().createImage(character); //tutaj zrobilem inne wczytywanie 
+        characterImage = Toolkit.getDefaultToolkit().createImage(character);
 
         File filePath = new File(path);
         originalImagePath = ImageIO.read(filePath);
@@ -356,7 +352,7 @@ public class GameMap extends JPanel implements KeyListener {
                         if ("P".equals(boardMap.mapTable[x + 2][y])) {
 
                             boardMap.mapTable[x + 1][y] = "P";
-                             boardMap.mapTable[x+2][y] = "B";
+                            boardMap.mapTable[x + 2][y] = "B";
                             animate(e);
                             break;
                         } else if ("H".equals(boardMap.mapTable[x + 2][y])) {
@@ -538,18 +534,6 @@ public class GameMap extends JPanel implements KeyListener {
                         break;
 
                 }
-
-//                progressHeight += interval * (float) (xSize);
-//                System.out.println(progressHeight);
-//                i++;
-//                repaint();
-//                if (i == frameNumber) {
-//                    timer.stop();
-//                    progressHeight = 0;
-//                    i = 1;
-//                    characterLocation.set(characterLocation.getX() + 1, characterLocation.getY());
-//                    flag = false;
-//                }
             }
 
         });
