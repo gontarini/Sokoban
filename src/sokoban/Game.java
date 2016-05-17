@@ -26,7 +26,6 @@ public class Game {
             @Override
             public void run() {
 
-                
                 MainMenu menu = new MainMenu();
                 Controller controller = new Controller(menu);
             }

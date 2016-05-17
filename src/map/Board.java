@@ -65,6 +65,11 @@ public class Board {
     protected String ballHolePath;
     
     /**
+     * number of balls in the game
+     */
+    protected int ballNumber;
+    
+    /**
      * Loading map configuration from the specified file
      *
      * @param levelNumber level number to load from file
@@ -96,6 +101,9 @@ public class Board {
         for (int i = 0; i < boardHeight; i++) {
             for (int j = 0; j < boardWidth; j++) {
                 mapTable[i][j] = instanceProperties.getProperty(i + "_" + j);
+                if("B".equals(mapTable[i][j])){
+                    ballNumber++;
+                }
             }
         }
 
