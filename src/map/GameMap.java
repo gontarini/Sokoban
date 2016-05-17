@@ -229,7 +229,7 @@ public class GameMap extends JPanel implements KeyListener {
         panelWidth = getWidth();
         panelHeight = getHeight();
 
-        xSize = panelWidth / (boardMap.boardWidth);
+        xSize = panelWidth / boardMap.boardWidth;
         ySize = panelHeight / boardMap.boardHeight;
 
         dx = (int) progressHeight;
@@ -237,11 +237,13 @@ public class GameMap extends JPanel implements KeyListener {
 
         paintMap(g, xSize, ySize);
 
+        if (ballFlag == true) {
+            g.drawImage(originalImageBall, yBall * xSize + dy, xBall * ySize + dx, xSize, ySize, null);
+        }
+
         if (characterImage != null) {
             g.drawImage(characterImage, characterLocation.getY() * xSize + dy, characterLocation.getX() * ySize + dx, xSize, ySize, this);
-            if (ballFlag == true) {
-                g.drawImage(originalImageBall, yBall * xSize + dy, xBall * ySize + dx, xSize, ySize, null);
-            }
+
         }
 
     }
@@ -270,15 +272,12 @@ public class GameMap extends JPanel implements KeyListener {
                             ballFlag = true;
                             xBall = x - 1;
                             yBall = y;
-                            //boardMap.mapTable[x - 1][y] = "P";
-                            // boardMap.mapTable[x - 2][y] = "B";
                             animate(e);
                             break;
                         } else if ("H".equals(boardMap.mapTable[x - 2][y])) {
-
-                            boardMap.mapTable[x - 1][y] = "P";
-                            boardMap.mapTable[x - 2][y] = "BH";
-                            boardMap.ballNumber--;
+                            ballFlag = true;
+                            xBall = x - 1;
+                            yBall = y;
                             animate(e);
                             break;
                         } else {
@@ -290,15 +289,16 @@ public class GameMap extends JPanel implements KeyListener {
                     } else if ("BH".equals(boardMap.mapTable[x - 1][y])) {
                         if ("P".equals(boardMap.mapTable[x - 2][y])) {
 
-                            boardMap.mapTable[x - 1][y] = "H";
-                            boardMap.mapTable[x - 2][y] = "B";
-                            boardMap.ballNumber++;
+                            ballFlag = true;
+                            xBall = x - 1;
+                            yBall = y;
                             animate(e);
                             break;
                         } else if ("H".equals(boardMap.mapTable[x - 2][y])) {
 
-                            boardMap.mapTable[x - 1][y] = "H";
-                            boardMap.mapTable[x - 2][y] = "BH";
+                            ballFlag = true;
+                            xBall = x - 1;
+                            yBall = y;
                             animate(e);
                             break;
                         } else {
@@ -317,15 +317,16 @@ public class GameMap extends JPanel implements KeyListener {
                     } else if ("B".equals(boardMap.mapTable[x][y + 1])) {
                         if ("P".equals(boardMap.mapTable[x][y + 2])) {
 
-                            boardMap.mapTable[x][y + 1] = "P";
-                            boardMap.mapTable[x][y + 2] = "B";
+                            ballFlag = true;
+                            xBall = x;
+                            yBall = y + 1;
                             animate(e);
                             break;
                         } else if ("H".equals(boardMap.mapTable[x][y + 2])) {
 
-                            boardMap.mapTable[x][y + 1] = "P";
-                            boardMap.mapTable[x][y + 2] = "BH";
-                            boardMap.ballNumber--;
+                            ballFlag = true;
+                            xBall = x;
+                            yBall = y + 1;
                             animate(e);
                             break;
                         } else {
@@ -337,15 +338,15 @@ public class GameMap extends JPanel implements KeyListener {
                     } else if ("BH".equals(boardMap.mapTable[x][y + 1])) {
                         if ("P".equals(boardMap.mapTable[x][y + 2])) {
 
-                            boardMap.mapTable[x][y + 1] = "H";
-                            boardMap.mapTable[x][y + 2] = "B";
-                            boardMap.ballNumber++;
+                            ballFlag = true;
+                            xBall = x;
+                            yBall = y + 1;
                             animate(e);
                             break;
                         } else if ("H".equals(boardMap.mapTable[x][y + 2])) {
-
-                            boardMap.mapTable[x][y + 1] = "H";
-                            boardMap.mapTable[x][y + 2] = "BH";
+                            ballFlag = true;
+                            xBall = x;
+                            yBall = y + 1;
                             animate(e);
                             break;
                         } else {
@@ -364,16 +365,15 @@ public class GameMap extends JPanel implements KeyListener {
                         break;
                     } else if ("B".equals(boardMap.mapTable[x + 1][y])) {
                         if ("P".equals(boardMap.mapTable[x + 2][y])) {
-
-                            boardMap.mapTable[x + 1][y] = "P";
-                            boardMap.mapTable[x + 2][y] = "B";
+                            ballFlag = true;
+                            xBall = x + 1;
+                            yBall = y;
                             animate(e);
                             break;
                         } else if ("H".equals(boardMap.mapTable[x + 2][y])) {
-
-                            boardMap.mapTable[x + 1][y] = "P";
-                            boardMap.mapTable[x + 2][y] = "BH";
-                            boardMap.ballNumber--;
+                            ballFlag = true;
+                            xBall = x + 1;
+                            yBall = y;
                             animate(e);
                             break;
                         } else {
@@ -384,15 +384,15 @@ public class GameMap extends JPanel implements KeyListener {
                         break;
                     } else if ("BH".equals(boardMap.mapTable[x + 1][y])) {
                         if ("P".equals(boardMap.mapTable[x + 2][y])) {
-
-                            boardMap.mapTable[x + 1][y] = "H";
-                            boardMap.mapTable[x + 2][y] = "B";
-                            boardMap.ballNumber++;
+                            ballFlag = true;
+                            xBall = x + 1;
+                            yBall = y;
                             animate(e);
                             break;
                         } else if ("H".equals(boardMap.mapTable[x + 2][y])) {
-
-                            boardMap.mapTable[x + 2][y] = "BH";
+                            ballFlag = true;
+                            xBall = x + 1;
+                            yBall = y;
                             animate(e);
                             break;
                         } else {
@@ -410,16 +410,15 @@ public class GameMap extends JPanel implements KeyListener {
                         break;
                     } else if ("B".equals(boardMap.mapTable[x][y - 1])) {
                         if ("P".equals(boardMap.mapTable[x][y - 2])) {
-
-                            boardMap.mapTable[x][y - 1] = "P";
-                            boardMap.mapTable[x][y - 2] = "B";
+                            ballFlag = true;
+                            xBall = x;
+                            yBall = y - 1;
                             animate(e);
                             break;
                         } else if ("H".equals(boardMap.mapTable[x][y - 2])) {
-
-                            boardMap.mapTable[x][y - 1] = "P";
-                            boardMap.mapTable[x][y - 2] = "BH";
-                            boardMap.ballNumber--;
+                            ballFlag = true;
+                            xBall = x;
+                            yBall = y - 1;
                             animate(e);
                             break;
                         } else {
@@ -430,16 +429,15 @@ public class GameMap extends JPanel implements KeyListener {
                         break;
                     } else if ("BH".equals(boardMap.mapTable[x][y - 1])) {
                         if ("P".equals(boardMap.mapTable[x][y - 2])) {
-
-                            boardMap.mapTable[x][y - 1] = "H";
-                            boardMap.mapTable[x][y - 2] = "B";
-                            boardMap.ballNumber++;
+                            ballFlag = true;
+                            xBall = x;
+                            yBall = y - 1;
                             animate(e);
                             break;
                         } else if ("H".equals(boardMap.mapTable[x][y - 2])) {
-
-                            boardMap.mapTable[x][y - 1] = "H";
-                            boardMap.mapTable[x][y - 2] = "BH";
+                            ballFlag = true;
+                            xBall = x;
+                            yBall = y - 1;
                             animate(e);
                             break;
                         } else {
@@ -496,14 +494,44 @@ public class GameMap extends JPanel implements KeyListener {
                             timer.stop();
                             progressHeight = 0;
                             dx = 0;
-
+                            flag = false;
                             i = 1;
                             characterLocation.set(characterLocation.getX() - 1, characterLocation.getY());
-                            flag = false;
+
                             if (ballFlag == true) {
-                                ballFlag = false;
-                                boardMap.mapTable[xBall][yBall] = "P";
-                                boardMap.mapTable[xBall - 1][yBall] = "B";
+                                if ("B".equals(boardMap.mapTable[xBall][yBall])) {
+                                    if ("P".equals(boardMap.mapTable[xBall - 1][yBall])) {
+
+                                        ballFlag = false;
+                                        boardMap.mapTable[xBall][yBall] = "P";
+                                        boardMap.mapTable[xBall - 1][yBall] = "B";
+                                        break;
+                                    } else if ("H".equals(boardMap.mapTable[xBall - 1][yBall])) {
+                                        ballFlag = false;
+                                        boardMap.mapTable[xBall][yBall] = "P";
+                                        boardMap.mapTable[xBall - 1][yBall] = "BH";
+                                        boardMap.ballNumber--;
+                                        break;
+                                    } else {
+                                        break;
+                                    }
+                                } else if ("BH".equals(boardMap.mapTable[xBall][yBall])) {
+                                    if ("P".equals(boardMap.mapTable[xBall - 1][yBall])) {
+                                        ballFlag = false;
+                                        boardMap.mapTable[xBall][yBall] = "H";
+                                        boardMap.mapTable[xBall - 1][yBall] = "B";
+                                        boardMap.ballNumber++;
+                                        break;
+                                    } else if ("H".equals(boardMap.mapTable[xBall - 1][yBall])) {
+
+                                        ballFlag = false;
+                                        boardMap.mapTable[xBall][yBall] = "H";
+                                        boardMap.mapTable[xBall - 1][yBall] = "BH";
+                                        break;
+                                    } else {
+                                        break;
+                                    }
+                                }
                             }
                         }
                         break;
@@ -518,7 +546,41 @@ public class GameMap extends JPanel implements KeyListener {
                             i = 1;
                             characterLocation.set(characterLocation.getX() + 1, characterLocation.getY());
                             flag = false;
+                            if ("B".equals(boardMap.mapTable[xBall][yBall])) {
+                                if ("P".equals(boardMap.mapTable[xBall + 1][yBall])) {
+
+                                    ballFlag = false;
+                                    boardMap.mapTable[xBall][yBall] = "P";
+                                    boardMap.mapTable[xBall + 1][yBall] = "B";
+                                    break;
+                                } else if ("H".equals(boardMap.mapTable[xBall + 1][yBall])) {
+                                    ballFlag = false;
+                                    boardMap.mapTable[xBall][yBall] = "P";
+                                    boardMap.mapTable[xBall + 1][yBall] = "BH";
+                                    boardMap.ballNumber--;
+                                    break;
+                                } else {
+                                    break;
+                                }
+                            } else if ("BH".equals(boardMap.mapTable[xBall][yBall])) {
+                                if ("P".equals(boardMap.mapTable[xBall + 1][yBall])) {
+                                    ballFlag = false;
+                                    boardMap.mapTable[xBall][yBall] = "H";
+                                    boardMap.mapTable[xBall + 1][yBall] = "B";
+                                    boardMap.ballNumber++;
+                                    break;
+                                } else if ("H".equals(boardMap.mapTable[xBall + 1][yBall])) {
+
+                                    ballFlag = false;
+                                    boardMap.mapTable[xBall][yBall] = "H";
+                                    boardMap.mapTable[xBall + 1][yBall] = "BH";
+                                    break;
+                                } else {
+                                    break;
+                                }
+                            }
                         }
+
                         break;
 
                     case (KeyEvent.VK_RIGHT):
@@ -532,6 +594,39 @@ public class GameMap extends JPanel implements KeyListener {
                             i = 1;
                             characterLocation.set(characterLocation.getX(), characterLocation.getY() + 1);
                             flag = false;
+                            if ("B".equals(boardMap.mapTable[xBall][yBall])) {
+                                if ("P".equals(boardMap.mapTable[xBall][yBall + 1])) {
+
+                                    ballFlag = false;
+                                    boardMap.mapTable[xBall][yBall] = "P";
+                                    boardMap.mapTable[xBall][yBall + 1] = "B";
+                                    break;
+                                } else if ("H".equals(boardMap.mapTable[xBall][yBall + 1])) {
+                                    ballFlag = false;
+                                    boardMap.mapTable[xBall][yBall] = "P";
+                                    boardMap.mapTable[xBall][yBall + 1] = "BH";
+                                    boardMap.ballNumber--;
+                                    break;
+                                } else {
+                                    break;
+                                }
+                            } else if ("BH".equals(boardMap.mapTable[xBall][yBall])) {
+                                if ("P".equals(boardMap.mapTable[xBall][yBall + 1])) {
+                                    ballFlag = false;
+                                    boardMap.mapTable[xBall][yBall] = "H";
+                                    boardMap.mapTable[xBall][yBall + 1] = "B";
+                                    boardMap.ballNumber++;
+                                    break;
+                                } else if ("H".equals(boardMap.mapTable[xBall][yBall + 1])) {
+
+                                    ballFlag = false;
+                                    boardMap.mapTable[xBall][yBall] = "H";
+                                    boardMap.mapTable[xBall][yBall + 1] = "BH";
+                                    break;
+                                } else {
+                                    break;
+                                }
+                            }
                         }
                         break;
 
@@ -546,6 +641,39 @@ public class GameMap extends JPanel implements KeyListener {
                             i = 1;
                             characterLocation.set(characterLocation.getX(), characterLocation.getY() - 1);
                             flag = false;
+                            if ("B".equals(boardMap.mapTable[xBall][yBall])) {
+                                if ("P".equals(boardMap.mapTable[xBall][yBall - 1])) {
+
+                                    ballFlag = false;
+                                    boardMap.mapTable[xBall][yBall] = "P";
+                                    boardMap.mapTable[xBall][yBall - 1] = "B";
+                                    break;
+                                } else if ("H".equals(boardMap.mapTable[xBall][yBall - 1])) {
+                                    ballFlag = false;
+                                    boardMap.mapTable[xBall][yBall] = "P";
+                                    boardMap.mapTable[xBall][yBall - 1] = "BH";
+                                    boardMap.ballNumber--;
+                                    break;
+                                } else {
+                                    break;
+                                }
+                            } else if ("BH".equals(boardMap.mapTable[xBall][yBall])) {
+                                if ("P".equals(boardMap.mapTable[xBall][yBall - 1])) {
+                                    ballFlag = false;
+                                    boardMap.mapTable[xBall][yBall] = "H";
+                                    boardMap.mapTable[xBall][yBall - 1] = "B";
+                                    boardMap.ballNumber++;
+                                    break;
+                                } else if ("H".equals(boardMap.mapTable[xBall][yBall - 1])) {
+
+                                    ballFlag = false;
+                                    boardMap.mapTable[xBall][yBall] = "H";
+                                    boardMap.mapTable[xBall][yBall - 1] = "BH";
+                                    break;
+                                } else {
+                                    break;
+                                }
+                            }
                         }
                         break;
 
