@@ -449,22 +449,6 @@ public class GameMap extends JPanel implements KeyListener {
             }
         }
 
-        if (boardMap.ballNumber == 0) {
-            JFrame winner = new JFrame("Winner!");
-            JPanel winnerPanel = new JPanel();
-            JLabel winnerLabel = new JLabel("Congratulations, you won!");
-            winnerPanel.add(winnerLabel, BorderLayout.CENTER);
-            winnerPanel.setVisible(true);
-
-            winner.add(winnerPanel);
-            winner.setLocationRelativeTo(this);
-            winner.pack();
-
-            winner.setSize(200, 75);
-            winner.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            winner.setVisible(true);
-
-        }
     }
 
     @Override
@@ -474,7 +458,6 @@ public class GameMap extends JPanel implements KeyListener {
 
     private int i = 1;
 
-    ;
     private void animate(KeyEvent typed) {
 
         flag = true;
@@ -676,6 +659,22 @@ public class GameMap extends JPanel implements KeyListener {
                             }
                         }
                         break;
+
+                }
+                if (boardMap.ballNumber == 0) {
+                    JFrame winner = new JFrame("Winner!");
+                    JPanel winnerPanel = new JPanel();
+                    JLabel winnerLabel = new JLabel("Congratulations, you won!");
+                    winnerPanel.add(winnerLabel, BorderLayout.CENTER);
+                    winnerPanel.setVisible(true);
+
+                    winner.add(winnerPanel);
+                    winner.setLocationRelativeTo(null);
+                    winner.pack();
+
+                    winner.setSize(200, 75);
+                    winner.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    winner.setVisible(true);
 
                 }
             }
