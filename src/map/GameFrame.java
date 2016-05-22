@@ -33,7 +33,7 @@ public class GameFrame extends JFrame{
     }
 
     /**
-     * basic method, which is invoke during creating object of such class
+     * basic method, which is invoked during creating object of such class
      * it makes objects contain game board with action and panel exploring game time 
      * and give opportunity to manipulate pause mode etc.
      * @param level particular level to be loaded
