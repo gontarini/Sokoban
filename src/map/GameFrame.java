@@ -11,7 +11,7 @@ import javax.swing.JFrame;
  *
  * @author Pawel and Marcin
  */
-public class GameFrame extends JFrame {
+public class GameFrame extends JFrame{
 
     /**
      * left panel of game frame
@@ -33,8 +33,10 @@ public class GameFrame extends JFrame {
     }
 
     /**
-     *
-     * @param level
+     * basic method, which is invoke during creating object of such class
+     * it makes objects contain game board with action and panel exploring game time 
+     * and give opportunity to manipulate pause mode etc.
+     * @param level particular level to be loaded
      */
     private void initialize(String level) {
         gameMap = new GameMap(level);
@@ -56,8 +58,27 @@ public class GameFrame extends JFrame {
         });
     }
 
+    /**
+     * method which gives as a parameter listener to scores fields
+     * @param listener the following listener
+     */
     public void addListener(ActionListener listener) {
         scores.addListener(listener);
     }
 
+    /**
+     * method helps making gameMap focused
+     */
+    public void setGameMapFocused(){
+        gameMap.requestFocusInWindow();
+    }
+    /**
+     * method decides whether game mode is on or off
+     * if flag equals true the mode is paused, otherwise it's on
+     * @param flag equal value to pcFlag
+     */
+    public void setPause(boolean flag){
+        gameMap.pcFlag = flag;
+        scores.setTimeMode(flag);
+    }
 }

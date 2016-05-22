@@ -117,7 +117,15 @@ public class GameMap extends JPanel implements KeyListener {
      */
     private int xBall, yBall;
 
+    /**
+     * small parameters used during animation
+     */
     private int dx, dy;
+
+    /**
+     * pause and continue flag
+     */
+    protected boolean pcFlag;
 
     /**
      * constructor
@@ -256,7 +264,7 @@ public class GameMap extends JPanel implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
 
-        if (flag == false) {
+        if (flag == false && pcFlag == false) {
             int x, y;
             switch (e.getKeyCode()) {
                 case (KeyEvent.VK_UP):
@@ -467,215 +475,217 @@ public class GameMap extends JPanel implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 float interval = (float) (1.0 / (float) (frameNumber));
 
-                switch (typed.getKeyCode()) {
-                    case (KeyEvent.VK_UP):
+                if (pcFlag == false) {
 
-                        progressHeight += -interval * (float) (ySize);
-                        i++;
-                        repaint();
-                        if (i == frameNumber) {
-                            timer.stop();
-                            progressHeight = 0;
-                            dx = 0;
-                            flag = false;
-                            i = 1;
-                            characterLocation.set(characterLocation.getX() - 1, characterLocation.getY());
+                    switch (typed.getKeyCode()) {
+                        case (KeyEvent.VK_UP):
+                            progressHeight += -interval * (float) (ySize);
+                            i++;
+                            repaint();
+                            if (i == frameNumber) {
+                                timer.stop();
+                                progressHeight = 0;
+                                dx = 0;
+                                flag = false;
+                                i = 1;
+                                characterLocation.set(characterLocation.getX() - 1, characterLocation.getY());
 
-                            if (ballFlag == true) {
+                                if (ballFlag == true) {
+                                    if ("B".equals(boardMap.mapTable[xBall][yBall])) {
+                                        if ("P".equals(boardMap.mapTable[xBall - 1][yBall])) {
+
+                                            ballFlag = false;
+                                            boardMap.mapTable[xBall][yBall] = "P";
+                                            boardMap.mapTable[xBall - 1][yBall] = "B";
+                                            break;
+                                        } else if ("H".equals(boardMap.mapTable[xBall - 1][yBall])) {
+                                            ballFlag = false;
+                                            boardMap.mapTable[xBall][yBall] = "P";
+                                            boardMap.mapTable[xBall - 1][yBall] = "BH";
+                                            boardMap.ballNumber--;
+                                            break;
+                                        } else {
+                                            break;
+                                        }
+                                    } else if ("BH".equals(boardMap.mapTable[xBall][yBall])) {
+                                        if ("P".equals(boardMap.mapTable[xBall - 1][yBall])) {
+                                            ballFlag = false;
+                                            boardMap.mapTable[xBall][yBall] = "H";
+                                            boardMap.mapTable[xBall - 1][yBall] = "B";
+                                            boardMap.ballNumber++;
+                                            break;
+                                        } else if ("H".equals(boardMap.mapTable[xBall - 1][yBall])) {
+
+                                            ballFlag = false;
+                                            boardMap.mapTable[xBall][yBall] = "H";
+                                            boardMap.mapTable[xBall - 1][yBall] = "BH";
+                                            break;
+                                        } else {
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+
+                        case (KeyEvent.VK_DOWN):
+                            progressHeight += interval * (float) (ySize);
+                            i++;
+                            repaint();
+                            if (i == frameNumber) {
+                                timer.stop();
+                                progressHeight = 0;
+                                i = 1;
+                                characterLocation.set(characterLocation.getX() + 1, characterLocation.getY());
+                                flag = false;
                                 if ("B".equals(boardMap.mapTable[xBall][yBall])) {
-                                    if ("P".equals(boardMap.mapTable[xBall - 1][yBall])) {
+                                    if ("P".equals(boardMap.mapTable[xBall + 1][yBall])) {
 
                                         ballFlag = false;
                                         boardMap.mapTable[xBall][yBall] = "P";
-                                        boardMap.mapTable[xBall - 1][yBall] = "B";
+                                        boardMap.mapTable[xBall + 1][yBall] = "B";
                                         break;
-                                    } else if ("H".equals(boardMap.mapTable[xBall - 1][yBall])) {
+                                    } else if ("H".equals(boardMap.mapTable[xBall + 1][yBall])) {
                                         ballFlag = false;
                                         boardMap.mapTable[xBall][yBall] = "P";
-                                        boardMap.mapTable[xBall - 1][yBall] = "BH";
+                                        boardMap.mapTable[xBall + 1][yBall] = "BH";
                                         boardMap.ballNumber--;
                                         break;
                                     } else {
                                         break;
                                     }
                                 } else if ("BH".equals(boardMap.mapTable[xBall][yBall])) {
-                                    if ("P".equals(boardMap.mapTable[xBall - 1][yBall])) {
+                                    if ("P".equals(boardMap.mapTable[xBall + 1][yBall])) {
                                         ballFlag = false;
                                         boardMap.mapTable[xBall][yBall] = "H";
-                                        boardMap.mapTable[xBall - 1][yBall] = "B";
+                                        boardMap.mapTable[xBall + 1][yBall] = "B";
                                         boardMap.ballNumber++;
                                         break;
-                                    } else if ("H".equals(boardMap.mapTable[xBall - 1][yBall])) {
+                                    } else if ("H".equals(boardMap.mapTable[xBall + 1][yBall])) {
 
                                         ballFlag = false;
                                         boardMap.mapTable[xBall][yBall] = "H";
-                                        boardMap.mapTable[xBall - 1][yBall] = "BH";
+                                        boardMap.mapTable[xBall + 1][yBall] = "BH";
                                         break;
                                     } else {
                                         break;
                                     }
                                 }
                             }
-                        }
-                        break;
 
-                    case (KeyEvent.VK_DOWN):
-                        progressHeight += interval * (float) (ySize);
-                        i++;
-                        repaint();
-                        if (i == frameNumber) {
-                            timer.stop();
-                            progressHeight = 0;
-                            i = 1;
-                            characterLocation.set(characterLocation.getX() + 1, characterLocation.getY());
-                            flag = false;
-                            if ("B".equals(boardMap.mapTable[xBall][yBall])) {
-                                if ("P".equals(boardMap.mapTable[xBall + 1][yBall])) {
+                            break;
 
-                                    ballFlag = false;
-                                    boardMap.mapTable[xBall][yBall] = "P";
-                                    boardMap.mapTable[xBall + 1][yBall] = "B";
-                                    break;
-                                } else if ("H".equals(boardMap.mapTable[xBall + 1][yBall])) {
-                                    ballFlag = false;
-                                    boardMap.mapTable[xBall][yBall] = "P";
-                                    boardMap.mapTable[xBall + 1][yBall] = "BH";
-                                    boardMap.ballNumber--;
-                                    break;
-                                } else {
-                                    break;
-                                }
-                            } else if ("BH".equals(boardMap.mapTable[xBall][yBall])) {
-                                if ("P".equals(boardMap.mapTable[xBall + 1][yBall])) {
-                                    ballFlag = false;
-                                    boardMap.mapTable[xBall][yBall] = "H";
-                                    boardMap.mapTable[xBall + 1][yBall] = "B";
-                                    boardMap.ballNumber++;
-                                    break;
-                                } else if ("H".equals(boardMap.mapTable[xBall + 1][yBall])) {
+                        case (KeyEvent.VK_RIGHT):
 
-                                    ballFlag = false;
-                                    boardMap.mapTable[xBall][yBall] = "H";
-                                    boardMap.mapTable[xBall + 1][yBall] = "BH";
-                                    break;
-                                } else {
-                                    break;
-                                }
-                            }
-                        }
+                            progressWidth += interval * (float) (xSize);
+                            i++;
+                            repaint();
+                            if (i == frameNumber) {
+                                timer.stop();
+                                progressWidth = 0;
+                                i = 1;
+                                characterLocation.set(characterLocation.getX(), characterLocation.getY() + 1);
+                                flag = false;
+                                if ("B".equals(boardMap.mapTable[xBall][yBall])) {
+                                    if ("P".equals(boardMap.mapTable[xBall][yBall + 1])) {
 
-                        break;
+                                        ballFlag = false;
+                                        boardMap.mapTable[xBall][yBall] = "P";
+                                        boardMap.mapTable[xBall][yBall + 1] = "B";
+                                        break;
+                                    } else if ("H".equals(boardMap.mapTable[xBall][yBall + 1])) {
+                                        ballFlag = false;
+                                        boardMap.mapTable[xBall][yBall] = "P";
+                                        boardMap.mapTable[xBall][yBall + 1] = "BH";
+                                        boardMap.ballNumber--;
+                                        break;
+                                    } else {
+                                        break;
+                                    }
+                                } else if ("BH".equals(boardMap.mapTable[xBall][yBall])) {
+                                    if ("P".equals(boardMap.mapTable[xBall][yBall + 1])) {
+                                        ballFlag = false;
+                                        boardMap.mapTable[xBall][yBall] = "H";
+                                        boardMap.mapTable[xBall][yBall + 1] = "B";
+                                        boardMap.ballNumber++;
+                                        break;
+                                    } else if ("H".equals(boardMap.mapTable[xBall][yBall + 1])) {
 
-                    case (KeyEvent.VK_RIGHT):
-
-                        progressWidth += interval * (float) (xSize);
-                        i++;
-                        repaint();
-                        if (i == frameNumber) {
-                            timer.stop();
-                            progressWidth = 0;
-                            i = 1;
-                            characterLocation.set(characterLocation.getX(), characterLocation.getY() + 1);
-                            flag = false;
-                            if ("B".equals(boardMap.mapTable[xBall][yBall])) {
-                                if ("P".equals(boardMap.mapTable[xBall][yBall + 1])) {
-
-                                    ballFlag = false;
-                                    boardMap.mapTable[xBall][yBall] = "P";
-                                    boardMap.mapTable[xBall][yBall + 1] = "B";
-                                    break;
-                                } else if ("H".equals(boardMap.mapTable[xBall][yBall + 1])) {
-                                    ballFlag = false;
-                                    boardMap.mapTable[xBall][yBall] = "P";
-                                    boardMap.mapTable[xBall][yBall + 1] = "BH";
-                                    boardMap.ballNumber--;
-                                    break;
-                                } else {
-                                    break;
-                                }
-                            } else if ("BH".equals(boardMap.mapTable[xBall][yBall])) {
-                                if ("P".equals(boardMap.mapTable[xBall][yBall + 1])) {
-                                    ballFlag = false;
-                                    boardMap.mapTable[xBall][yBall] = "H";
-                                    boardMap.mapTable[xBall][yBall + 1] = "B";
-                                    boardMap.ballNumber++;
-                                    break;
-                                } else if ("H".equals(boardMap.mapTable[xBall][yBall + 1])) {
-
-                                    ballFlag = false;
-                                    boardMap.mapTable[xBall][yBall] = "H";
-                                    boardMap.mapTable[xBall][yBall + 1] = "BH";
-                                    break;
-                                } else {
-                                    break;
+                                        ballFlag = false;
+                                        boardMap.mapTable[xBall][yBall] = "H";
+                                        boardMap.mapTable[xBall][yBall + 1] = "BH";
+                                        break;
+                                    } else {
+                                        break;
+                                    }
                                 }
                             }
-                        }
-                        break;
+                            break;
 
-                    case (KeyEvent.VK_LEFT):
+                        case (KeyEvent.VK_LEFT):
 
-                        progressWidth += -interval * (float) (xSize);
-                        i++;
-                        repaint();
-                        if (i == frameNumber) {
-                            timer.stop();
-                            progressWidth = 0;
-                            i = 1;
-                            characterLocation.set(characterLocation.getX(), characterLocation.getY() - 1);
-                            flag = false;
-                            if ("B".equals(boardMap.mapTable[xBall][yBall])) {
-                                if ("P".equals(boardMap.mapTable[xBall][yBall - 1])) {
+                            progressWidth += -interval * (float) (xSize);
+                            i++;
+                            repaint();
+                            if (i == frameNumber) {
+                                timer.stop();
+                                progressWidth = 0;
+                                i = 1;
+                                characterLocation.set(characterLocation.getX(), characterLocation.getY() - 1);
+                                flag = false;
+                                if ("B".equals(boardMap.mapTable[xBall][yBall])) {
+                                    if ("P".equals(boardMap.mapTable[xBall][yBall - 1])) {
 
-                                    ballFlag = false;
-                                    boardMap.mapTable[xBall][yBall] = "P";
-                                    boardMap.mapTable[xBall][yBall - 1] = "B";
-                                    break;
-                                } else if ("H".equals(boardMap.mapTable[xBall][yBall - 1])) {
-                                    ballFlag = false;
-                                    boardMap.mapTable[xBall][yBall] = "P";
-                                    boardMap.mapTable[xBall][yBall - 1] = "BH";
-                                    boardMap.ballNumber--;
-                                    break;
-                                } else {
-                                    break;
-                                }
-                            } else if ("BH".equals(boardMap.mapTable[xBall][yBall])) {
-                                if ("P".equals(boardMap.mapTable[xBall][yBall - 1])) {
-                                    ballFlag = false;
-                                    boardMap.mapTable[xBall][yBall] = "H";
-                                    boardMap.mapTable[xBall][yBall - 1] = "B";
-                                    boardMap.ballNumber++;
-                                    break;
-                                } else if ("H".equals(boardMap.mapTable[xBall][yBall - 1])) {
+                                        ballFlag = false;
+                                        boardMap.mapTable[xBall][yBall] = "P";
+                                        boardMap.mapTable[xBall][yBall - 1] = "B";
+                                        break;
+                                    } else if ("H".equals(boardMap.mapTable[xBall][yBall - 1])) {
+                                        ballFlag = false;
+                                        boardMap.mapTable[xBall][yBall] = "P";
+                                        boardMap.mapTable[xBall][yBall - 1] = "BH";
+                                        boardMap.ballNumber--;
+                                        break;
+                                    } else {
+                                        break;
+                                    }
+                                } else if ("BH".equals(boardMap.mapTable[xBall][yBall])) {
+                                    if ("P".equals(boardMap.mapTable[xBall][yBall - 1])) {
+                                        ballFlag = false;
+                                        boardMap.mapTable[xBall][yBall] = "H";
+                                        boardMap.mapTable[xBall][yBall - 1] = "B";
+                                        boardMap.ballNumber++;
+                                        break;
+                                    } else if ("H".equals(boardMap.mapTable[xBall][yBall - 1])) {
 
-                                    ballFlag = false;
-                                    boardMap.mapTable[xBall][yBall] = "H";
-                                    boardMap.mapTable[xBall][yBall - 1] = "BH";
-                                    break;
-                                } else {
-                                    break;
+                                        ballFlag = false;
+                                        boardMap.mapTable[xBall][yBall] = "H";
+                                        boardMap.mapTable[xBall][yBall - 1] = "BH";
+                                        break;
+                                    } else {
+                                        break;
+                                    }
                                 }
                             }
-                        }
-                        break;
+                            break;
 
-                }
-                if (boardMap.ballNumber == 0) {
-                    JFrame winner = new JFrame("Winner!");
-                    JPanel winnerPanel = new JPanel();
-                    JLabel winnerLabel = new JLabel("Congratulations, you won!");
-                    winnerPanel.add(winnerLabel, BorderLayout.CENTER);
-                    winnerPanel.setVisible(true);
+                    }
+                    if (boardMap.ballNumber == 0) {
+                        JFrame winner = new JFrame("Winner!");
+                        JPanel winnerPanel = new JPanel();
+                        JLabel winnerLabel = new JLabel("Congratulations, you won!");
+                        winnerPanel.add(winnerLabel, BorderLayout.CENTER);
+                        winnerPanel.setVisible(true);
 
-                    winner.add(winnerPanel);
-                    winner.setLocationRelativeTo(null);
-                    winner.pack();
+                        winner.add(winnerPanel);
+                        winner.setLocationRelativeTo(null);
+                        winner.pack();
 
-                    winner.setSize(200, 75);
-                    winner.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    winner.setVisible(true);
+                        winner.setSize(200, 75);
+                        winner.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                        winner.setVisible(true);
 
+                    }
                 }
             }
 
