@@ -100,7 +100,7 @@ public class GameMap extends JPanel implements KeyListener {
     /**
      * number of frames in one second of animation
      */
-    private final int frameNumber = 15;
+    private final int frameNumber = 30;
 
     /**
      * flag that turns listener off if move is done
@@ -143,6 +143,7 @@ public class GameMap extends JPanel implements KeyListener {
      */
     private void initialize(String level) {
         boardMap = new Board();
+        
         try {
             boardMap.load(level);
         } catch (IOException e) {
@@ -692,5 +693,6 @@ public class GameMap extends JPanel implements KeyListener {
         });
         timer.start();
     }
+    
 
 }
