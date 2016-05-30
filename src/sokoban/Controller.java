@@ -49,7 +49,14 @@ public class Controller implements ActionListener {
         } else if (command.equals("EXIT")) {
             menu.setVisible(true);
             game.dispose();
+        } else if (command.equals("PAUSE")){
+            game.setPause(true);
+        } else if (command.equals("CONTINUE")){
+            game.setPause(false);
+            game.setGameMapFocused();
         }
+        
+        
     }
 
 }
