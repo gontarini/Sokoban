@@ -25,12 +25,7 @@ public class LevelSelection extends DefaultComboBoxModel {
      */
     private int levelAmount;
 
-    /**
-     * list of available levels
-     */
-    private ArrayList levelList; // to delete
 
-//    private DefaultComboBoxModel dftModel;
     public LevelSelection() throws IOException {
         readData();
     }

@@ -56,7 +56,21 @@ public class MainMenu extends JFrame {
      * Combo Box with available levels
      */
     private JComboBox levelBox;
+    
+    /**
+     * label to present history of the game 
+     */
+    public JLabel listLabel;
+    
+    /**
+     * panel contains listLabel
+     */
+    public JPanel panel3;
 
+    /**
+     * panel with comboBox
+     */
+    public JPanel panel2;
     /**
      * class constructor
      */
@@ -110,12 +124,12 @@ public class MainMenu extends JFrame {
         JPanel panel = new JPanel(flow);
 
         //panel with comboBox
-        JPanel panel2 = new JPanel(border);
+        panel2 = new JPanel(border);
         panel2.setVisible(false);
 
         //panel with list of scores
-        JPanel panel3 = new JPanel(border);
-        JLabel listLabel = new JLabel("List of recent scores");
+        panel3 = new JPanel(border);
+        listLabel = new JLabel("List of recent scores");
 
         panel.add(selectLevelButton);
         panel.add(exitButton);
@@ -141,19 +155,8 @@ public class MainMenu extends JFrame {
                 pack();
             }
         });
-
-        panel3.add(listLabel, BorderLayout.CENTER);
+        
         panel3.setVisible(false);
-
-        listButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                add(panel3, BorderLayout.CENTER);
-                panel3.setVisible(true);
-                panel2.setVisible(false);
-                pack();
-            }
-        });
 
         pack();
         setVisible(true);
