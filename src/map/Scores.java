@@ -132,4 +132,6 @@ public class Scores extends JPanel {
     public void setTimeMode(boolean flag){
         timeMode = flag;
     }
+    
+    protected int getScore(){ return 5*timeCounter; }
 }

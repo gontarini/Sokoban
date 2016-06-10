@@ -100,7 +100,7 @@ public class GameMap extends JPanel implements KeyListener {
     /**
      * number of frames in one second of animation
      */
-    private final int frameNumber = 30;
+    private final int frameNumber = 15;
 
     /**
      * flag that turns listener off if move is done
@@ -172,7 +172,7 @@ public class GameMap extends JPanel implements KeyListener {
     private void loadImage(String wall, String character, String path, String ball, String hole, String ballHole) throws IOException {
         File fileWall = new File(wall);
         originalImageWall = ImageIO.read(fileWall);
-
+        
         characterImage = Toolkit.getDefaultToolkit().createImage(character);
 
         File filePath = new File(path);
@@ -672,20 +672,7 @@ public class GameMap extends JPanel implements KeyListener {
 
                     }
                     if (boardMap.ballNumber == 0) {
-                        JFrame winner = new JFrame("Winner!");
-                        JPanel winnerPanel = new JPanel();
-                        JLabel winnerLabel = new JLabel("Congratulations, you won!");
-                        winnerPanel.add(winnerLabel, BorderLayout.CENTER);
-                        winnerPanel.setVisible(true);
-
-                        winner.add(winnerPanel);
-                        winner.setLocationRelativeTo(null);
-                        winner.pack();
-
-                        winner.setSize(200, 75);
-                        winner.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                        winner.setVisible(true);
-
+                          setVisibility(false);
                     }
                 }
             }
@@ -694,5 +681,8 @@ public class GameMap extends JPanel implements KeyListener {
         timer.start();
     }
     
+    private void setVisibility(boolean flag){
+        this.setVisible(flag);
+    }
 
 }
