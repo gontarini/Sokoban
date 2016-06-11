@@ -3,7 +3,6 @@ package menu;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
 

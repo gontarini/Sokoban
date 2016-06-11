@@ -1,9 +1,11 @@
 package sokoban;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
+import javax.swing.JButton;
 import map.GameFrame;
 import menu.GameResults;
 import menu.MainMenu;
@@ -20,7 +22,7 @@ public class Controller implements ActionListener {
     /**
      * Reference to menu frame
      */
-    private final MainMenu menu;
+    private MainMenu menu;
 
     /**
      * Reference to game frame
@@ -32,25 +34,31 @@ public class Controller implements ActionListener {
      */
     private final GameResults results;
 
-    /**
-     * Parametric constructor which takes reference to current objects of the
-     * game
-     *
-     * @param refMenu reference to MainMenu object
-     */
-    public Controller(MainMenu refMenu) {
-        menu = refMenu;
+//    /**
+//     * Parametric constructor which takes reference to current objects of the
+//     * game
+//     *
+//     * @param refMenu reference to MainMenu object
+//     */
+//    public Controller(MainMenu refMenu) {
+//        menu = refMenu;
+//        menu.addListener(this);
+//        results = new GameResults();        
+//    }
+    public Controller() {
+        menu = new MainMenu();
         menu.addListener(this);
-        results = new GameResults();        
+        results = new GameResults();
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        
+
         switch (command) {
             case "PLAY":
-                menu.setVisible(false);
+//                menu.setVisible(false);
+                menu.dispose();
                 game = new GameFrame(menu.getLevel());
                 game.addListener(this);
                 game.setVisible(true);
@@ -58,10 +66,29 @@ public class Controller implements ActionListener {
             case "LIST":
                 results.readFromFile();
                 setHistoryOfTheGameText();
+
+                if (menu.cleanerButton == null) {
+                    menu.cleanerButton = new JButton();
+                    menu.cleanerButton.setText("CLEAN HISTORY");
+                    menu.cleanerButton.setSize(20, 20);
+                }
+                menu.cleanerButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println("cleaned");
+                        results.cleanHistory();
+                        setHistoryOfTheGameText();
+                    }
+
+                });
+                menu.panel2.setVisible(false);
+
+                menu.panel3.add(menu.cleanerButton, BorderLayout.LINE_END);
+                menu.panel3.setBackground(Color.LIGHT_GRAY);
                 menu.panel3.add(menu.listLabel, BorderLayout.CENTER);
                 menu.add(menu.panel3, BorderLayout.CENTER);
                 menu.panel3.setVisible(true);
-                menu.panel2.setVisible(false);
+
                 menu.pack();
                 break;
             case "EXIT":
@@ -78,12 +105,13 @@ public class Controller implements ActionListener {
             case "CONFIRM":
                 results.saveToFile(game.textField.getText(), game.score);
                 game.winner.dispose();
-                menu.setVisible(true);
+                menu = new MainMenu();
+                menu.addListener(this);
                 break;
             default:
                 break;
         }
-        
+
     }
 
     /**
@@ -91,18 +119,17 @@ public class Controller implements ActionListener {
      */
     private void setHistoryOfTheGameText() {
         String text = "<html>";
-        
+
         for (Iterator it = results.winnersList.iterator(); it.hasNext();) {
             Winners winner = (Winners) it.next();
             text += "<br>Player: " + winner.getNick() + ", score: " + winner.getScore();
         }
-        
+
         if (!text.equals("")) {
-            text+="</html>";
+            text += "</html>";
             menu.listLabel.setText(text);
         } else {
             menu.listLabel.setText("No history rejected");
         }
     }
 }
-

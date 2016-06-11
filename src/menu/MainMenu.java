@@ -1,6 +1,7 @@
 package menu;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -71,6 +72,12 @@ public class MainMenu extends JFrame {
      * panel with comboBox
      */
     public JPanel panel2;
+    
+    /**
+     * history cleaner button
+     */
+    public JButton cleanerButton;
+    
     /**
      * class constructor
      */
@@ -93,7 +100,7 @@ public class MainMenu extends JFrame {
 
         playButton = new JButton();
         playButton.setText("PLAY");
-
+        
         selectLevelButton.setText("SELECT LEVEL");
         exitButton.setText("EXIT");
         listButton.setText("SCORES");
@@ -134,6 +141,8 @@ public class MainMenu extends JFrame {
         panel.add(selectLevelButton);
         panel.add(exitButton);
         panel.add(listButton);
+        
+        panel.setBackground(Color.darkGray);
 
         add(panel, BorderLayout.NORTH);
 
@@ -143,19 +152,24 @@ public class MainMenu extends JFrame {
 
         levelPane = new JScrollPane(levelBox);
 
-        panel2.add(levelPane, BorderLayout.NORTH);
+        panel2.add(levelPane, BorderLayout.BEFORE_FIRST_LINE);
         panel2.add(playButton, BorderLayout.SOUTH);
+        panel2.setBackground(Color.LIGHT_GRAY);
 
         selectLevelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                add(panel2, BorderLayout.CENTER);
+     
                 panel2.setVisible(true);
                 panel3.setVisible(false);
                 pack();
             }
         });
         
+        add(panel2, BorderLayout.SOUTH);
+        
+        
+        panel2.setVisible(false);
         panel3.setVisible(false);
 
         pack();

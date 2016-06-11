@@ -1,3 +1,0 @@
-Pawel=45
-Magda=45
-mama=45

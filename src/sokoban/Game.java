@@ -2,7 +2,7 @@ package sokoban;
 
 import java.awt.EventQueue;
 import java.io.IOException;
-import menu.MainMenu;
+//import menu.MainMenu;
 
 /**
  *
@@ -17,13 +17,12 @@ public class Game {
      */
     public static void main(String[] args) throws IOException {
 
-        // Board.writeSimpleBoard(10, 10);
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
 
-                MainMenu menu = new MainMenu();
-                Controller controller = new Controller(menu);
+//                MainMenu menu = new MainMenu();
+                Controller controller = new Controller();
             }
         });
 

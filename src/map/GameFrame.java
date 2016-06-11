@@ -75,6 +75,9 @@ public class GameFrame extends JFrame {
         gameMap = new GameMap(level);
         scores = new Scores();
 
+        int levelx = Integer.valueOf(level.charAt(0));
+        scores.setMulitplier(levelx);
+        
         gameMap.addAncestorListener(new AncestorListener() {
             @Override
             public void ancestorAdded(AncestorEvent event) {
@@ -83,6 +86,7 @@ public class GameFrame extends JFrame {
             @Override
             public void ancestorRemoved(AncestorEvent event) {
                 if (gameMap.isVisible() != true) {
+                    scores.finishCountig(true);
                     score = scores.getScore();
                     createSavingBox();
                     dispose();
@@ -160,7 +164,7 @@ public class GameFrame extends JFrame {
         
 
         JPanel textPanel = new JPanel(new BorderLayout());
-        textField = new JTextField("Print your nickname");
+        textField = new JTextField("Nickname");
         textPanel.add(textField, BorderLayout.NORTH);
         
 

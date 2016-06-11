@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -46,6 +47,16 @@ public class Scores extends JPanel {
      * time counter
      */
     private int timeCounter;
+    
+    /**
+     * flag to finish time elapse
+     */
+    private boolean timeStop;
+    
+    /**
+     * variable which specifies multiplier for each level
+     */
+    private int variableForLevel;
 
     /**
      * constructor
@@ -79,14 +90,13 @@ public class Scores extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                if (timeStop==true){
+                    timeController.stop();
+                }
                 if (timeMode == false) {
                     timeCounter += 1;
                     time.setText("Time = " + timeCounter);
                     repaint();
-
-                    if (timeCounter == 100) {
-                        timeController.stop();
-                    }
                 }
             }
         });
@@ -133,5 +143,25 @@ public class Scores extends JPanel {
         timeMode = flag;
     }
     
-    protected int getScore(){ return 5*timeCounter; }
+    /**
+     * method responsible for measure score of the game, 
+     * which is based on the time passed
+     * @return score of the game
+     */
+    protected int getScore(){ return variableForLevel*timeCounter; }
+    
+    /**
+     * method to finish time elapsing off
+     * @param stop 
+     */
+    protected void finishCountig(boolean stop){ timeStop = true;}
+        
+    /**
+     * setting multiplier for measuring score
+     * @param level multiplier for current level
+     */
+    protected void setMulitplier(int level){
+        variableForLevel = level;
+    }
+   
 }

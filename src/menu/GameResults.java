@@ -3,10 +3,10 @@ package menu;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Set;
 
@@ -25,7 +25,7 @@ public class GameResults {
     /**
      * list of winners objects
      */
-    public final ArrayList winnersList;
+    public ArrayList winnersList;
 
     /**
      * reference to winners class
@@ -62,6 +62,8 @@ public class GameResults {
      * method reads history of the game saved before
      */
     public void readFromFile() {
+        winnersList = new ArrayList();
+        
         Properties instanceProperties = new Properties();
         try {
             FileInputStream reader = new FileInputStream(scoresPath);
@@ -85,5 +87,17 @@ public class GameResults {
         }
     }
     
+    /**
+     * cleaning game history
+     */
+    public void cleanHistory(){
+        try{
+            FileOutputStream fos = new FileOutputStream(scoresPath);
+            readFromFile();
+        }
+        catch(FileNotFoundException ex){
+            ex.printStackTrace();
+        }
+    }
 
 }
