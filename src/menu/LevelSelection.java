@@ -3,7 +3,6 @@ package menu;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
 
@@ -26,12 +25,12 @@ public class LevelSelection extends DefaultComboBoxModel {
     private int levelAmount;
 
     /**
-     * list of available levels
+     * amount of level previously passed
      */
-    private ArrayList levelList; // to delete
+    protected int passed;
 
-//    private DefaultComboBoxModel dftModel;
-    public LevelSelection() throws IOException {
+    public LevelSelection(int number) throws IOException {
+        passed = number;
         readData();
     }
 
@@ -64,7 +63,9 @@ public class LevelSelection extends DefaultComboBoxModel {
     private void makeBox(Properties prop) {
 
         for (int i = 1; i <= levelAmount; i++) {
-            this.addElement((prop.getProperty(String.valueOf(i))));
+            if (passed + 1 >= i) {
+                this.addElement((prop.getProperty(String.valueOf(i))));
+            }
         }
     }
 }

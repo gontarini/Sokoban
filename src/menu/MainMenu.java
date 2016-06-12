@@ -1,6 +1,7 @@
 package menu;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -58,11 +59,34 @@ public class MainMenu extends JFrame {
     private JComboBox levelBox;
 
     /**
-     * class constructor
+     * label to present history of the game
      */
-    public MainMenu() {
+    public JLabel listLabel;
+
+    /**
+     * panel contains listLabel
+     */
+    public JPanel panel3;
+
+    /**
+     * panel with comboBox
+     */
+    public JPanel panel2;
+
+    /**
+     * history cleaner button
+     */
+    public JButton cleanerButton;
+
+    /**
+     * class constructor
+     * @param number passed levels
+     */
+    @SuppressWarnings("OverridableMethodCallInConstructor")
+    public MainMenu(int number) {
+        
         try {
-            initialize();
+            initialize(number);
         } catch (IOException ex) {
             Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -72,7 +96,8 @@ public class MainMenu extends JFrame {
      *
      * @throws IOException
      */
-    private void initialize() throws IOException {
+    @SuppressWarnings("Convert2Lambda")
+    private void initialize(int number) throws IOException {
         selectLevelButton = new JButton();
         listButton = new JButton();
         exitButton = new JButton();
@@ -110,60 +135,64 @@ public class MainMenu extends JFrame {
         JPanel panel = new JPanel(flow);
 
         //panel with comboBox
-        JPanel panel2 = new JPanel(border);
+        panel2 = new JPanel(border);
         panel2.setVisible(false);
 
         //panel with list of scores
-        JPanel panel3 = new JPanel(border);
-        JLabel listLabel = new JLabel("List of recent scores");
+        panel3 = new JPanel(border);
+        listLabel = new JLabel("List of recent scores");
 
         panel.add(selectLevelButton);
         panel.add(exitButton);
         panel.add(listButton);
 
+        panel.setBackground(Color.darkGray);
+
         add(panel, BorderLayout.NORTH);
 
-        levelSelction = new LevelSelection();
+        levelSelction = new LevelSelection(number);
         levelBox = new JComboBox(levelSelction);
         levelBox.setSelectedIndex(0);
 
         levelPane = new JScrollPane(levelBox);
 
-        panel2.add(levelPane, BorderLayout.NORTH);
+        panel2.add(levelPane, BorderLayout.BEFORE_FIRST_LINE);
         panel2.add(playButton, BorderLayout.SOUTH);
+        panel2.setBackground(Color.LIGHT_GRAY);
 
         selectLevelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                add(panel2, BorderLayout.CENTER);
+
                 panel2.setVisible(true);
                 panel3.setVisible(false);
                 pack();
             }
         });
 
-        panel3.add(listLabel, BorderLayout.CENTER);
-        panel3.setVisible(false);
+        add(panel2, BorderLayout.SOUTH);
 
-        listButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                add(panel3, BorderLayout.CENTER);
-                panel3.setVisible(true);
-                panel2.setVisible(false);
-                pack();
-            }
-        });
+        panel2.setVisible(false);
+        panel3.setVisible(false);
 
         pack();
         setVisible(true);
     }
 
+    /**
+     * adding a listener to the specifed component,
+     * such as playbutton and listbutton
+     * @param listener listener for components
+     */
     public void addListener(ActionListener listener) {
         playButton.addActionListener(listener);
         listButton.addActionListener(listener);
     }
 
+    /**
+     * gives a selected level in level Box
+     * @return selected level
+     */
     public String getLevel() {
         return (String) levelBox.getItemAt(levelBox.getSelectedIndex());
     }

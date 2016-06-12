@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -33,13 +32,28 @@ public class GameFrame extends JFrame {
     /**
      * latest score achieved
      */
-    private int score;
+    public int score;
 
     /**
      * button which finishes and saves particular score connected with written
      * nickname
      */
     private JButton finishedButton;
+    
+    /**
+     * area to write player's nick
+     */
+    public JTextField textField; 
+    
+    /**
+     * static variable to set button listener
+     */
+    private ActionListener listen;
+    
+    /**
+     * nickname to be saved there
+     */
+    public JFrame winner;
 
     /**
      * constructor
@@ -61,6 +75,9 @@ public class GameFrame extends JFrame {
         gameMap = new GameMap(level);
         scores = new Scores();
 
+        int levelx = Integer.valueOf(level.charAt(0));
+        scores.setMulitplier(levelx);
+        
         gameMap.addAncestorListener(new AncestorListener() {
             @Override
             public void ancestorAdded(AncestorEvent event) {
@@ -69,19 +86,15 @@ public class GameFrame extends JFrame {
             @Override
             public void ancestorRemoved(AncestorEvent event) {
                 if (gameMap.isVisible() != true) {
+                    scores.finishCountig(true);
                     score = scores.getScore();
-                    System.out.println("Im removed");
-                    System.out.println("Your score is: " + score);
-
                     createSavingBox();
-
                     dispose();
                 }
             }
 
             @Override
             public void ancestorMoved(AncestorEvent event) {
-                System.out.println("Im moved");
             }
         });
         add(gameMap, BorderLayout.CENTER);
@@ -108,6 +121,7 @@ public class GameFrame extends JFrame {
      */
     public void addListener(ActionListener listener) {
         scores.addListener(listener);
+        listen = listener;
     }
 
     /**
@@ -127,21 +141,32 @@ public class GameFrame extends JFrame {
         gameMap.pcFlag = flag;
         scores.setTimeMode(flag);
     }
+    
+    /**
+     * set listener for FinishedButton in order to be listen in Controller
+     */
+    private void setButtonListener(){
+        finishedButton.addActionListener(listen);
+    }
+    
 
     /**
      * creating box after succesfully completed game
      */
     private void createSavingBox() {
-        JFrame winner = new JFrame("Winner!");
+        winner = new JFrame("Winner!");
         JPanel winnerPanel = new JPanel(new BorderLayout());
         JLabel winnerLabel = new JLabel("Congratulations, you won!");
 
         finishedButton = new JButton("Confirm");
-        finishedButton.setActionCommand("CONFIRMED");
+        finishedButton.setActionCommand("CONFIRM");
+        setButtonListener();
+        
 
         JPanel textPanel = new JPanel(new BorderLayout());
-        JTextField textField = new JTextField("Print your nickname");
+        textField = new JTextField("Nickname");
         textPanel.add(textField, BorderLayout.NORTH);
+        
 
         JPanel buttonPanel = new JPanel(new BorderLayout());
         buttonPanel.add(finishedButton, BorderLayout.SOUTH);

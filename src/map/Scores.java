@@ -36,6 +36,11 @@ public class Scores extends JPanel {
      * allowes turn pasue off
      */
     private JButton continueButton;
+    
+    /**
+     * button which let the player to take one attend more
+     */
+    private JButton onceAgainButton;
 
     /**
      * flag to stop timer counting
@@ -46,6 +51,16 @@ public class Scores extends JPanel {
      * time counter
      */
     private int timeCounter;
+    
+    /**
+     * flag to finish time elapse
+     */
+    private boolean timeStop;
+    
+    /**
+     * variable which specifies multiplier for each level
+     */
+    private int variableForLevel;
 
     /**
      * constructor
@@ -67,6 +82,9 @@ public class Scores extends JPanel {
 
         continueButton = new JButton("CONTINUE");
         continueButton.setActionCommand("CONTINUE");
+        
+        onceAgainButton = new JButton("TRY AGAIN");
+        onceAgainButton.setActionCommand("TRY AGAIN");
 
         time = new JLabel();
 
@@ -79,24 +97,30 @@ public class Scores extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                if (timeStop==true){
+                    timeController.stop();
+                }
                 if (timeMode == false) {
                     timeCounter += 1;
                     time.setText("Time = " + timeCounter);
                     repaint();
-
-                    if (timeCounter == 100) {
-                        timeController.stop();
-                    }
                 }
             }
         });
-        
+        JPanel doubleInsidePanel = new JPanel(new BorderLayout());
         JPanel insideCenterPanel = new JPanel(new BorderLayout());
         JPanel centerPanel = new JPanel(new BorderLayout());
+        
         centerPanel.add(pause, BorderLayout.BEFORE_FIRST_LINE);
 
         insideCenterPanel.add(continueButton, BorderLayout.NORTH);
 
+        doubleInsidePanel.add(onceAgainButton, BorderLayout.NORTH);
+        
+        doubleInsidePanel.setBackground(Color.LIGHT_GRAY);
+        
+        insideCenterPanel.add(doubleInsidePanel, BorderLayout.CENTER);
+        
         centerPanel.add(insideCenterPanel, BorderLayout.AFTER_LINE_ENDS);
 
         setLayout(new BorderLayout());
@@ -121,6 +145,7 @@ public class Scores extends JPanel {
         exitButton.addActionListener(listener);
         pause.addActionListener(listener);
         continueButton.addActionListener(listener);
+        onceAgainButton.addActionListener(listener);
     }
     
 
@@ -133,5 +158,25 @@ public class Scores extends JPanel {
         timeMode = flag;
     }
     
-    protected int getScore(){ return 5*timeCounter; }
+    /**
+     * method responsible for measure score of the game, 
+     * which is based on the time passed
+     * @return score of the game
+     */
+    protected int getScore(){ return variableForLevel*timeCounter; }
+    
+    /**
+     * method to finish time elapsing off
+     * @param stop 
+     */
+    protected void finishCountig(boolean stop){ timeStop = true;}
+        
+    /**
+     * setting multiplier for measuring score
+     * @param level multiplier for current level
+     */
+    protected void setMulitplier(int level){
+        variableForLevel = level;
+    }
+   
 }
