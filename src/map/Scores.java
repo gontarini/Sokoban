@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -37,6 +36,11 @@ public class Scores extends JPanel {
      * allowes turn pasue off
      */
     private JButton continueButton;
+    
+    /**
+     * button which let the player to take one attend more
+     */
+    private JButton onceAgainButton;
 
     /**
      * flag to stop timer counting
@@ -78,6 +82,9 @@ public class Scores extends JPanel {
 
         continueButton = new JButton("CONTINUE");
         continueButton.setActionCommand("CONTINUE");
+        
+        onceAgainButton = new JButton("TRY AGAIN");
+        onceAgainButton.setActionCommand("TRY AGAIN");
 
         time = new JLabel();
 
@@ -100,13 +107,20 @@ public class Scores extends JPanel {
                 }
             }
         });
-        
+        JPanel doubleInsidePanel = new JPanel(new BorderLayout());
         JPanel insideCenterPanel = new JPanel(new BorderLayout());
         JPanel centerPanel = new JPanel(new BorderLayout());
+        
         centerPanel.add(pause, BorderLayout.BEFORE_FIRST_LINE);
 
         insideCenterPanel.add(continueButton, BorderLayout.NORTH);
 
+        doubleInsidePanel.add(onceAgainButton, BorderLayout.NORTH);
+        
+        doubleInsidePanel.setBackground(Color.LIGHT_GRAY);
+        
+        insideCenterPanel.add(doubleInsidePanel, BorderLayout.CENTER);
+        
         centerPanel.add(insideCenterPanel, BorderLayout.AFTER_LINE_ENDS);
 
         setLayout(new BorderLayout());
@@ -131,6 +145,7 @@ public class Scores extends JPanel {
         exitButton.addActionListener(listener);
         pause.addActionListener(listener);
         continueButton.addActionListener(listener);
+        onceAgainButton.addActionListener(listener);
     }
     
 

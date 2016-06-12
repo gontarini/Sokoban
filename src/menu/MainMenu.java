@@ -57,12 +57,12 @@ public class MainMenu extends JFrame {
      * Combo Box with available levels
      */
     private JComboBox levelBox;
-    
+
     /**
-     * label to present history of the game 
+     * label to present history of the game
      */
     public JLabel listLabel;
-    
+
     /**
      * panel contains listLabel
      */
@@ -72,18 +72,21 @@ public class MainMenu extends JFrame {
      * panel with comboBox
      */
     public JPanel panel2;
-    
+
     /**
      * history cleaner button
      */
     public JButton cleanerButton;
-    
+
     /**
      * class constructor
+     * @param number passed levels
      */
-    public MainMenu() {
+    @SuppressWarnings("OverridableMethodCallInConstructor")
+    public MainMenu(int number) {
+        
         try {
-            initialize();
+            initialize(number);
         } catch (IOException ex) {
             Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -93,14 +96,15 @@ public class MainMenu extends JFrame {
      *
      * @throws IOException
      */
-    private void initialize() throws IOException {
+    @SuppressWarnings("Convert2Lambda")
+    private void initialize(int number) throws IOException {
         selectLevelButton = new JButton();
         listButton = new JButton();
         exitButton = new JButton();
 
         playButton = new JButton();
         playButton.setText("PLAY");
-        
+
         selectLevelButton.setText("SELECT LEVEL");
         exitButton.setText("EXIT");
         listButton.setText("SCORES");
@@ -141,12 +145,12 @@ public class MainMenu extends JFrame {
         panel.add(selectLevelButton);
         panel.add(exitButton);
         panel.add(listButton);
-        
+
         panel.setBackground(Color.darkGray);
 
         add(panel, BorderLayout.NORTH);
 
-        levelSelction = new LevelSelection();
+        levelSelction = new LevelSelection(number);
         levelBox = new JComboBox(levelSelction);
         levelBox.setSelectedIndex(0);
 
@@ -159,16 +163,15 @@ public class MainMenu extends JFrame {
         selectLevelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-     
+
                 panel2.setVisible(true);
                 panel3.setVisible(false);
                 pack();
             }
         });
-        
+
         add(panel2, BorderLayout.SOUTH);
-        
-        
+
         panel2.setVisible(false);
         panel3.setVisible(false);
 
@@ -176,11 +179,20 @@ public class MainMenu extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * adding a listener to the specifed component,
+     * such as playbutton and listbutton
+     * @param listener listener for components
+     */
     public void addListener(ActionListener listener) {
         playButton.addActionListener(listener);
         listButton.addActionListener(listener);
     }
 
+    /**
+     * gives a selected level in level Box
+     * @return selected level
+     */
     public String getLevel() {
         return (String) levelBox.getItemAt(levelBox.getSelectedIndex());
     }

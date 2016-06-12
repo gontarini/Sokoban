@@ -24,8 +24,13 @@ public class LevelSelection extends DefaultComboBoxModel {
      */
     private int levelAmount;
 
+    /**
+     * amount of level previously passed
+     */
+    protected int passed;
 
-    public LevelSelection() throws IOException {
+    public LevelSelection(int number) throws IOException {
+        passed = number;
         readData();
     }
 
@@ -58,7 +63,9 @@ public class LevelSelection extends DefaultComboBoxModel {
     private void makeBox(Properties prop) {
 
         for (int i = 1; i <= levelAmount; i++) {
-            this.addElement((prop.getProperty(String.valueOf(i))));
+            if (passed + 1 >= i) {
+                this.addElement((prop.getProperty(String.valueOf(i))));
+            }
         }
     }
 }
