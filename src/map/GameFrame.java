@@ -86,7 +86,7 @@ public class GameFrame extends JFrame {
             @Override
             public void ancestorRemoved(AncestorEvent event) {
                 if (gameMap.isVisible() != true) {
-                    scores.finishCountig(true);
+                    scores.finishCounting(true);
                     score = scores.getScore();
                     createSavingBox();
                     dispose();

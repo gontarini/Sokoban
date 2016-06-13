@@ -1,2 +1,6 @@
-Pawel=1078
-Gasnrke=1078
+Marcin=1
+Pawel=1
+Kapec=1
+random=2147483647
+Nickname=147
+Nickname2=150

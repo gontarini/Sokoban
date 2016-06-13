@@ -61,6 +61,7 @@ public class Scores extends JPanel {
      * variable which specifies multiplier for each level
      */
     private int variableForLevel;
+    
 
     /**
      * constructor
@@ -163,13 +164,16 @@ public class Scores extends JPanel {
      * which is based on the time passed
      * @return score of the game
      */
-    protected int getScore(){ return variableForLevel*timeCounter; }
+    protected int getScore(){
+//        int defaultTime = (int) Math.log()
+        return (int) Math.pow(variableForLevel*3, 20/timeCounter); 
+    }
     
     /**
      * method to finish time elapsing off
      * @param stop 
      */
-    protected void finishCountig(boolean stop){ timeStop = true;}
+    protected void finishCounting(boolean stop){ timeStop = true;}
         
     /**
      * setting multiplier for measuring score
