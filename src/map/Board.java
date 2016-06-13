@@ -65,6 +65,10 @@ public class Board {
     protected String ballHolePath;
 
     /**
+     * path to the bullet image
+     */
+    protected String bulletPath;
+    /**
      * number of balls in the game
      */
     protected int ballNumber;
@@ -95,6 +99,7 @@ public class Board {
         holePath = instanceProperties.getProperty("hole");
         endPath = instanceProperties.getProperty("end");
         ballHolePath = instanceProperties.getProperty("ballHole");
+        bulletPath = instanceProperties.getProperty("bullet");
 
         mapTable = new String[boardHeight][boardWidth];
 

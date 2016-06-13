@@ -1,15 +1,18 @@
 package map;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -56,6 +59,11 @@ public class GameMap extends JPanel implements KeyListener {
      * Image of the ballHole
      */
     private BufferedImage originalImageBallHole;
+
+    /**
+     * Image of the bullet
+     */
+    private BufferedImage originalImageBullet;
 
     /**
      * flag, which is true if character is standing on the hole
@@ -125,6 +133,36 @@ public class GameMap extends JPanel implements KeyListener {
     protected boolean pcFlag;
 
     /**
+     * true if shot is fired
+     */
+    private boolean bulletFlag = false;
+
+    /**
+     * rotates and sets locations of the bullet image
+     */
+    private AffineTransform transform;
+
+    /**
+     * present location of the bullet
+     */
+    private ObjectLocation bulletLocation;
+
+    /**
+     * number of available shots
+     */
+    private int shotNumber = 3;
+
+    /**
+     * angle of rotation
+     */
+    private int angle;
+
+    /**
+     * image of bullet which will rotate
+     */
+    private BufferedImage temporaryBullet;
+
+    /**
      * constructor
      *
      * @param level
@@ -140,7 +178,8 @@ public class GameMap extends JPanel implements KeyListener {
      */
     private void initialize(String level) {
         boardMap = new Board();
-        
+        bulletLocation = new ObjectLocation(1, 1);
+
         try {
             boardMap.load(level);
         } catch (IOException e) {
@@ -148,7 +187,7 @@ public class GameMap extends JPanel implements KeyListener {
         }
 
         try {
-            loadImage(boardMap.wallPath, boardMap.characterPath, boardMap.pathPath, boardMap.ballPath, boardMap.holePath, boardMap.ballHolePath);
+            loadImage(boardMap.wallPath, boardMap.characterPath, boardMap.pathPath, boardMap.ballPath, boardMap.holePath, boardMap.ballHolePath, boardMap.bulletPath);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -165,11 +204,12 @@ public class GameMap extends JPanel implements KeyListener {
      * @param ball
      * @param hole
      * @param ballHole
+     * @param bullet
      */
-    private void loadImage(String wall, String character, String path, String ball, String hole, String ballHole) throws IOException {
+    private void loadImage(String wall, String character, String path, String ball, String hole, String ballHole, String bullet) throws IOException {
         File fileWall = new File(wall);
         originalImageWall = ImageIO.read(fileWall);
-        
+
         characterImage = Toolkit.getDefaultToolkit().createImage(character);
 
         File filePath = new File(path);
@@ -183,6 +223,9 @@ public class GameMap extends JPanel implements KeyListener {
 
         File fileBallHole = new File(ballHole);
         originalImageBallHole = ImageIO.read(fileBallHole);
+
+        File fileBullet = new File(bullet);
+        originalImageBullet = ImageIO.read(fileBullet);
     }
 
     /**
@@ -247,9 +290,20 @@ public class GameMap extends JPanel implements KeyListener {
             g.drawImage(originalImageBall, yBall * xSize + dy, xBall * ySize + dx, xSize, ySize, null);
         }
 
-        if (characterImage != null) {
-            g.drawImage(characterImage, characterLocation.getY() * xSize + dy, characterLocation.getX() * ySize + dx, xSize, ySize, this);
+        if (bulletFlag == true) {
 
+            //  g.drawImage(temporaryBullet, bulletLocation.getY() * xSize + dy, bulletLocation.getX() * ySize + dx, xSize, ySize, null);
+            // transform.rotate(Math.toRadians(angle),(double)temporaryBullet.getWidth()/2.0,(double)temporaryBullet.getHeight()/2.0);
+            // System.out.println((double)temporaryBullet.getWidth()/2.0);
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.drawImage(temporaryBullet, transform, null);
+
+        }
+
+        if (characterImage != null && bulletFlag != true) {
+            g.drawImage(characterImage, characterLocation.getY() * xSize + dy, characterLocation.getX() * ySize + dx, xSize, ySize, this);
+        } else {
+            g.drawImage(characterImage, characterLocation.getY() * xSize, characterLocation.getX() * ySize, xSize, ySize, this);
         }
 
     }
@@ -452,6 +506,53 @@ public class GameMap extends JPanel implements KeyListener {
                     } else {
                         break;
                     }
+
+                case (KeyEvent.VK_W):
+                    bulletLocation.set(characterLocation.getX() - 1, characterLocation.getY());
+                    if (shotNumber != 0) {
+                        if ("P".equals(boardMap.mapTable[bulletLocation.getX()][bulletLocation.getY()]) || "H".equals(boardMap.mapTable[bulletLocation.getX()][bulletLocation.getY()])) {
+                            if ("P".equals(boardMap.mapTable[bulletLocation.getX() - 1][bulletLocation.getY()]) || "H".equals(boardMap.mapTable[bulletLocation.getX() - 1][bulletLocation.getY()])) {
+                                animateBullet(e);
+                            } else {
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+                    break;
+
+                case (KeyEvent.VK_S):
+                    bulletLocation.set(characterLocation.getX() + 1, characterLocation.getY());
+                    if (shotNumber != 0) {
+                        if ("P".equals(boardMap.mapTable[bulletLocation.getX()][bulletLocation.getY()]) || "H".equals(boardMap.mapTable[bulletLocation.getX()][bulletLocation.getY()])) {
+                            if ("P".equals(boardMap.mapTable[bulletLocation.getX() + 1][bulletLocation.getY()]) || "H".equals(boardMap.mapTable[bulletLocation.getX() + 1][bulletLocation.getY()])) {
+                                animateBullet(e);
+                            } else if("W".equals(boardMap.mapTable[bulletLocation.getX() + 1][bulletLocation.getY()])){ 
+                                
+                                break;
+                        }
+                        
+                        } else {
+                            break;
+                        }
+                    }
+                    break;
+
+                case (KeyEvent.VK_D):
+                    bulletLocation.set(characterLocation.getX(), characterLocation.getY() + 1);
+                    if (shotNumber != 0) {
+                        if ("P".equals(boardMap.mapTable[bulletLocation.getX()][bulletLocation.getY()]) || "H".equals(boardMap.mapTable[bulletLocation.getX()][bulletLocation.getY()])) {
+                            if ("P".equals(boardMap.mapTable[bulletLocation.getX()][bulletLocation.getY() + 1]) || "H".equals(boardMap.mapTable[bulletLocation.getX()][bulletLocation.getY() + 1])) {
+                                animateBullet(e);
+                            } else {
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+                    break;
             }
         }
 
@@ -669,7 +770,7 @@ public class GameMap extends JPanel implements KeyListener {
 
                     }
                     if (boardMap.ballNumber == 0) {
-                          setVisibility(false);
+                        setVisibility(false);
                     }
                 }
             }
@@ -677,8 +778,187 @@ public class GameMap extends JPanel implements KeyListener {
         });
         timer.start();
     }
-    
-    private void setVisibility(boolean flag){
+
+    private void animateBullet(KeyEvent typed) {
+
+        flag = true;
+        Timer timer = new Timer(frameNumber, null);
+        timer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                float interval = (float) (1.0 / (float) (frameNumber));
+//                temporaryBullet = originalImageBullet;
+//                transform = AffineTransform.getTranslateInstance(bulletLocation.getY() * xSize + dy, bulletLocation.getX() * ySize + dx);
+//                double xb = temporaryBullet.getWidth();
+//                double yb = temporaryBullet.getHeight();
+//                double xr = (double) temporaryBullet.getWidth() / 2.0;
+//                double yr = (double) temporaryBullet.getHeight() / 2.0;
+
+                double xb, yb, xr, yr;
+
+                if (pcFlag == false) {
+
+                    switch (typed.getKeyCode()) {
+                        case (KeyEvent.VK_W):
+
+                            temporaryBullet = originalImageBullet;
+                            transform = AffineTransform.getTranslateInstance(bulletLocation.getY() * xSize + dy, bulletLocation.getX() * ySize + dx);
+                            xb = temporaryBullet.getWidth();
+                            yb = temporaryBullet.getHeight();
+                            xr = (double) temporaryBullet.getWidth() / 2.0;
+                            yr = (double) temporaryBullet.getHeight() / 2.0;
+                            System.out.println(xr);
+                            System.out.println(yr);
+                            transform.rotate(Math.toRadians(0), xr, yr);
+                            bulletFlag = true;
+                            progressHeight += -interval * (float) (ySize);
+                            transform.scale(1.0 / (xb / xSize), 1.0 / (yb / ySize));
+                            i++;
+                            repaint();
+                            if (i == frameNumber) {
+                                timer.stop();
+                                progressHeight = 0;
+                                dx = 0;
+                                flag = false;
+                                bulletFlag = false;
+                                i = 1;
+                                bulletLocation.set(bulletLocation.getX() - 1, bulletLocation.getY());
+
+                                if ("P".equals(boardMap.mapTable[bulletLocation.getX() - 1][bulletLocation.getY()]) || "H".equals(boardMap.mapTable[bulletLocation.getX() - 1][bulletLocation.getY()])) {
+                                    animateBullet(typed);
+                                } else {
+                                    break;
+                                }
+                            }
+
+                            break;
+
+                        case (KeyEvent.VK_S):
+
+                            temporaryBullet = originalImageBullet;
+                            transform = AffineTransform.getTranslateInstance(bulletLocation.getY() * xSize + dy, bulletLocation.getX() * ySize + dx);
+                            xb = temporaryBullet.getWidth();
+                            yb = temporaryBullet.getHeight();
+                            xr = (double) temporaryBullet.getWidth() / 2.0;
+                            yr = (double) temporaryBullet.getHeight() / 2.0;
+                            System.out.println(xr);
+                            System.out.println(yr);
+                            transform.rotate(Math.toRadians(180),xSize/2,ySize/2);
+                            bulletFlag = true;
+
+                            progressHeight += +interval * (float) (ySize);
+                            transform.scale(1.0 / (xb / xSize), 1.0 / (yb / ySize));
+                            i++;
+                            repaint();
+                            if (i == frameNumber) {
+                                timer.stop();
+                                progressHeight = 0;
+                                dx = 0;
+                                flag = false;
+                                bulletFlag = false;
+                                i = 1;
+                                bulletLocation.set(bulletLocation.getX() + 1, bulletLocation.getY());
+
+                                if ("P".equals(boardMap.mapTable[bulletLocation.getX() + 1][bulletLocation.getY()]) || "H".equals(boardMap.mapTable[bulletLocation.getX() + 1][bulletLocation.getY()])) {
+                                    animateBullet(typed);
+                                } else {
+                                    break;
+                                }
+                            }
+
+                            break;
+
+                        case (KeyEvent.VK_D):
+
+                            temporaryBullet = originalImageBullet;
+                            transform = AffineTransform.getTranslateInstance(bulletLocation.getY() * xSize + dy, bulletLocation.getX() * ySize + dx);
+                            xb = temporaryBullet.getWidth();
+                            yb = temporaryBullet.getHeight();
+                            xr = (double) temporaryBullet.getWidth() / 2.0;
+                            yr = (double) temporaryBullet.getHeight() / 2.0;
+                            transform.rotate(Math.toRadians(90), xr, yr);
+                            bulletFlag = true;
+                            transform.scale(1.0 / (xb / ySize), 1.0 / (yb / xSize));
+                            progressWidth += +interval * (float) (xSize);
+                            i++;
+                            repaint();
+                            if (i == frameNumber) {
+                                timer.stop();
+                                progressWidth = 0;
+                                dy = 0;
+                                flag = false;
+                                bulletFlag = false;
+                                i = 1;
+                                bulletLocation.set(bulletLocation.getX(), bulletLocation.getY() + 1);
+
+                                if ("P".equals(boardMap.mapTable[bulletLocation.getX()][bulletLocation.getY() + 1]) || "H".equals(boardMap.mapTable[bulletLocation.getX()][bulletLocation.getY() + 1])) {
+                                    animateBullet(typed);
+                                } else {
+                                    break;
+                                }
+                            }
+
+                            break;
+
+                        case (KeyEvent.VK_LEFT):
+
+                            progressWidth += -interval * (float) (xSize);
+                            i++;
+                            repaint();
+                            if (i == frameNumber) {
+                                timer.stop();
+                                progressWidth = 0;
+                                i = 1;
+                                characterLocation.set(characterLocation.getX(), characterLocation.getY() - 1);
+                                flag = false;
+                                if ("B".equals(boardMap.mapTable[xBall][yBall])) {
+                                    if ("P".equals(boardMap.mapTable[xBall][yBall - 1])) {
+
+                                        ballFlag = false;
+                                        boardMap.mapTable[xBall][yBall] = "P";
+                                        boardMap.mapTable[xBall][yBall - 1] = "B";
+                                        break;
+                                    } else if ("H".equals(boardMap.mapTable[xBall][yBall - 1])) {
+                                        ballFlag = false;
+                                        boardMap.mapTable[xBall][yBall] = "P";
+                                        boardMap.mapTable[xBall][yBall - 1] = "BH";
+                                        boardMap.ballNumber--;
+                                        break;
+                                    } else {
+                                        break;
+                                    }
+                                } else if ("BH".equals(boardMap.mapTable[xBall][yBall])) {
+                                    if ("P".equals(boardMap.mapTable[xBall][yBall - 1])) {
+                                        ballFlag = false;
+                                        boardMap.mapTable[xBall][yBall] = "H";
+                                        boardMap.mapTable[xBall][yBall - 1] = "B";
+                                        boardMap.ballNumber++;
+                                        break;
+                                    } else if ("H".equals(boardMap.mapTable[xBall][yBall - 1])) {
+
+                                        ballFlag = false;
+                                        boardMap.mapTable[xBall][yBall] = "H";
+                                        boardMap.mapTable[xBall][yBall - 1] = "BH";
+                                        break;
+                                    } else {
+                                        break;
+                                    }
+                                }
+                            }
+                            break;
+
+                    }
+                    if (boardMap.ballNumber == 0) {
+                        setVisibility(false);
+                    }
+                }
+            }
+
+        });
+        timer.start();
+    }
+
+    private void setVisibility(boolean flag) {
         this.setVisible(flag);
     }
 
