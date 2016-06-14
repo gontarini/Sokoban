@@ -291,10 +291,6 @@ public class GameMap extends JPanel implements KeyListener {
         }
 
         if (bulletFlag == true) {
-
-            //  g.drawImage(temporaryBullet, bulletLocation.getY() * xSize + dy, bulletLocation.getX() * ySize + dx, xSize, ySize, null);
-            // transform.rotate(Math.toRadians(angle),(double)temporaryBullet.getWidth()/2.0,(double)temporaryBullet.getHeight()/2.0);
-            // System.out.println((double)temporaryBullet.getWidth()/2.0);
             Graphics2D g2d = (Graphics2D) g;
             g2d.drawImage(temporaryBullet, transform, null);
 
@@ -510,9 +506,20 @@ public class GameMap extends JPanel implements KeyListener {
                 case (KeyEvent.VK_W):
                     bulletLocation.set(characterLocation.getX() - 1, characterLocation.getY());
                     if (shotNumber != 0) {
-                        if ("P".equals(boardMap.mapTable[bulletLocation.getX()][bulletLocation.getY()]) || "H".equals(boardMap.mapTable[bulletLocation.getX()][bulletLocation.getY()])) {
-                            if ("P".equals(boardMap.mapTable[bulletLocation.getX() - 1][bulletLocation.getY()]) || "H".equals(boardMap.mapTable[bulletLocation.getX() - 1][bulletLocation.getY()])) {
+                        if("W".equals(boardMap.mapTable[bulletLocation.getX()][bulletLocation.getY()])){
+                            boardMap.mapTable[bulletLocation.getX()][bulletLocation.getY()] = "P";
+                            repaint();
+                            break;
+                        }
+                        else if ("P".equals(boardMap.mapTable[bulletLocation.getX()][bulletLocation.getY()]) || "H".equals(boardMap.mapTable[bulletLocation.getX()][bulletLocation.getY()])) {
+                            if("W".equals(boardMap.mapTable[bulletLocation.getX()-1][bulletLocation.getY()])){
+                                boardMap.mapTable[bulletLocation.getX()-1][bulletLocation.getY()] = "P";
+                                repaint();
+                                break;
+                            }
+                            else if ("P".equals(boardMap.mapTable[bulletLocation.getX() - 1][bulletLocation.getY()]) || "H".equals(boardMap.mapTable[bulletLocation.getX() - 1][bulletLocation.getY()])) {
                                 animateBullet(e);
+                                break;
                             } else {
                                 break;
                             }
@@ -826,7 +833,13 @@ public class GameMap extends JPanel implements KeyListener {
 
                                 if ("P".equals(boardMap.mapTable[bulletLocation.getX() - 1][bulletLocation.getY()]) || "H".equals(boardMap.mapTable[bulletLocation.getX() - 1][bulletLocation.getY()])) {
                                     animateBullet(typed);
-                                } else {
+                                }
+                                else if("W".equals(boardMap.mapTable[bulletLocation.getX() - 1][bulletLocation.getY()])){
+                                    boardMap.mapTable[bulletLocation.getX()-1][bulletLocation.getY()] = "P";
+                                repaint();
+                                break;
+                                }
+                                else {
                                     break;
                                 }
                             }
