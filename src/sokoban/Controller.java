@@ -70,19 +70,19 @@ public class Controller implements ActionListener, ItemListener {
      * attemps number frame
      */
     private JFrame frame;
-    
+
     /**
      * flag that turns network options on
      */
     private boolean networkFlag;
-    
+
     /**
      * instance of networkClient class
      */
     private NetworkClient networkClient;
 
     /**
-     * initialising parameters
+     * initializing parameters
      */
     @SuppressWarnings("LeakingThisInConstructor")
     public Controller() {
@@ -104,9 +104,18 @@ public class Controller implements ActionListener, ItemListener {
         switch (command) {
             case "PLAY":
                 menu.dispose();
-                game = new GameFrame(menu.getLevel());
-                game.addListener(this);
+                if(networkFlag == false){
+                    game = new GameFrame(menu.getLevel(), networkFlag);
+                    game.addListener(this);
                 game.setVisible(true);
+                }
+                else {
+                    networkClient.sendRequest("level "+menu.getLevel());
+                    game = new GameFrame(networkClient.receiveData(), networkFlag);
+                    game.addListener(this);
+                game.setVisible(true);
+                }
+                
                 break;
             case "LIST":
                 results.readFromFile();
@@ -137,11 +146,16 @@ public class Controller implements ActionListener, ItemListener {
                 break;
 
             case "SELECT":
-                if(networkFlag==false){
+                if (networkFlag == false) {
                     try {
-                    menu.levelSelction = new LevelSelection(passedLev, networkFlag);
-                } catch (IOException ex) {
-                    Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+                        menu.levelSelction = new LevelSelection(passedLev);
+                    } catch (IOException ex) {
+                        Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                } else {
+                    networkClient.sendRequest("levels");
+                    menu.levelSelction = new LevelSelection(passedLev, networkClient.receiveData());
                 }
                 menu.levelBox = new JComboBox(menu.levelSelction);
                 menu.levelBox.setSelectedIndex(0);
@@ -155,10 +169,6 @@ public class Controller implements ActionListener, ItemListener {
                 menu.panel3.setVisible(false);
                 menu.add(menu.panel2, BorderLayout.SOUTH);
                 menu.pack();
-                }
-                else {
-                    networkClient.requestLevels();
-                }
                 break;
 
             case "EXIT":
@@ -249,9 +259,17 @@ public class Controller implements ActionListener, ItemListener {
             numberOfAttemps++;
             game.dispose();
 
-            game = new GameFrame(menu.getLevel());
-            game.addListener(this);
-            game.setVisible(true);
+            if(networkFlag == false){
+                    game = new GameFrame(menu.getLevel(), networkFlag);
+                    game.addListener(this);
+                game.setVisible(true);
+                }
+                else {
+                    networkClient.sendRequest("level "+menu.getLevel());
+                    game = new GameFrame(networkClient.receiveData(), networkFlag);
+                    game.addListener(this);
+                game.setVisible(true);
+                }
 
             showBox();
         }
@@ -295,12 +313,11 @@ public class Controller implements ActionListener, ItemListener {
 
     @Override
     public void itemStateChanged(ItemEvent e) {
-        if(e.getStateChange()==1){
+        if (e.getStateChange() == 1) {
             networkClient = new NetworkClient();
-            networkFlag = true;  
+            networkFlag = true;
             System.out.println(networkFlag);
-        }
-        else{
+        } else {
             networkFlag = false;
             System.out.println(networkFlag);
         }

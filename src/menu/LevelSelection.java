@@ -29,14 +29,27 @@ public class LevelSelection extends DefaultComboBoxModel {
      */
     protected int passed;
 
-    public LevelSelection(int number, boolean flag) throws IOException {
-        if(flag == false){
-            passed = number;
+    /**
+     * invoke method to read local data
+     *
+     * @param number number of already passed levels
+     * @throws IOException
+     */
+    public LevelSelection(int number) throws IOException {
+
+        passed = number;
         readData();
-        }
-        else{
-            
-        }
+    }
+
+    /**
+     * invokes methods to read remote data
+     *
+     * @param number number of already passed levels
+     * @param data remote data of available levels
+     */
+    public LevelSelection(int number, String data) {
+        passed = number;
+        readRemoteData(data);
     }
 
     /**
@@ -55,6 +68,23 @@ public class LevelSelection extends DefaultComboBoxModel {
             reader.close();
         }
 
+        levelAmount = Integer.parseInt(instanceProperties.getProperty("Amount"));
+        makeBox(instanceProperties);
+
+    }
+
+    /**
+     * reads remote data and invoke method which creates ComboBox
+     *
+     * @param data data used to create ComboBox
+     */
+    private void readRemoteData(String data) {
+        Properties instanceProperties = new Properties();
+        String[] splitSpace = data.split(" ");
+        for (String splitted : splitSpace) {
+            String[] splitEquals = splitted.split("=");
+            instanceProperties.put(splitEquals[0], splitEquals[1]);
+        }
         levelAmount = Integer.parseInt(instanceProperties.getProperty("Amount"));
         makeBox(instanceProperties);
 

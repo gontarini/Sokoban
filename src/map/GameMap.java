@@ -125,16 +125,22 @@ public class GameMap extends JPanel implements KeyListener {
     protected boolean pcFlag;
 
     /**
-     * constructor
+     * constructor 
      *
-     * @param level
+     * @param levelData variable which is level number for local mode and data for remote mode
+     * @param networkFlag
      */
-    public GameMap(String level) {
-        initialize(level);
+    public GameMap(String levelData, boolean networkFlag) {
+        if(networkFlag == false){
+        initialize(levelData);
+        } else{
+            initializeRemote(levelData);
+        }
     }
+    
 
     /**
-     * load map configurations initialize JPanel object with an image
+     * load map configurations and initialize JPanel object with an image
      *
      * @param level
      */
@@ -146,6 +152,24 @@ public class GameMap extends JPanel implements KeyListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        try {
+            loadImage(boardMap.wallPath, boardMap.characterPath, boardMap.pathPath, boardMap.ballPath, boardMap.holePath, boardMap.ballHolePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        addKeyListener(this);
+    }
+    
+    /**
+     * load remote map configurations and initialize JPanel object with an image
+     * @param data 
+     */
+    private void initializeRemote(String data){
+        boardMap = new Board();
+        
+        boardMap.loadRemote(data);
 
         try {
             loadImage(boardMap.wallPath, boardMap.characterPath, boardMap.pathPath, boardMap.ballPath, boardMap.holePath, boardMap.ballHolePath);

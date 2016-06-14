@@ -18,8 +18,8 @@ public class NetworkClient {
     /**
      * name of the server
      */
-    private String hostName = "localhost";
-
+    private String hostName = "192.168.43.136";
+//private String hostName = "localhost";
     /**
      * remote endpoint connection
      */
@@ -37,7 +37,7 @@ public class NetworkClient {
         try {
             System.out.println("Connecting to " + hostName
                     + " on port " + portNumber);
-            client = new Socket("192.168.0.2", portNumber);
+            client = new Socket(hostName, portNumber);
             System.out.println("Just connected to "
                     + client.getRemoteSocketAddress());
 //         OutputStream outToServer = client.getOutputStream();
@@ -55,16 +55,37 @@ public class NetworkClient {
 
     }
 
-    public void requestLevels() {
-        
-            try {
-                OutputStream outToServer = client.getOutputStream();
-                DataOutputStream  out = new DataOutputStream(outToServer);
-                out.writeUTF("levels");
-            } catch (IOException ex) {
-                Logger.getLogger(NetworkClient.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        
-        
+    /**
+     * send request to the server
+     *
+     * @param request request to send to the server
+     */
+    public void sendRequest(String request) {
+
+        try {
+            OutputStream outToServer = client.getOutputStream();
+            DataOutputStream out = new DataOutputStream(outToServer);
+            out.writeUTF(request);
+        } catch (IOException ex) {
+            Logger.getLogger(NetworkClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    /**
+     * received requested data from the server
+     *
+     * @return received data
+     */
+    protected String receiveData() {
+        String receivedData = "";
+        try {
+            InputStream inFromServer = client.getInputStream();
+            DataInputStream in = new DataInputStream(inFromServer);
+            receivedData = in.readUTF();
+        } catch (IOException ex) {
+            Logger.getLogger(NetworkClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return receivedData;
     }
 }
