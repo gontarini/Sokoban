@@ -5,10 +5,12 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -41,7 +43,7 @@ public class MainMenu extends JFrame {
     /**
      * Combo box of available levels
      */
-    private LevelSelection levelSelction;
+    public LevelSelection levelSelction;
 
     /**
      * Select level button
@@ -51,12 +53,12 @@ public class MainMenu extends JFrame {
     /**
      * pane to scroll list of levels
      */
-    private JScrollPane levelPane;
+    public JScrollPane levelPane;
 
     /**
      * Combo Box with available levels
      */
-    private JComboBox levelBox;
+    public JComboBox levelBox;
 
     /**
      * label to present history of the game
@@ -77,14 +79,20 @@ public class MainMenu extends JFrame {
      * history cleaner button
      */
     public JButton cleanerButton;
+    
+    /**
+     * component which indicates whether player wants to use network
+     */
+    private JCheckBox checkbox;
 
     /**
      * class constructor
+     *
      * @param number passed levels
      */
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public MainMenu(int number) {
-        
+
         try {
             initialize(number);
         } catch (IOException ex) {
@@ -114,6 +122,9 @@ public class MainMenu extends JFrame {
         selectLevelButton.setActionCommand("SELECT");
         exitButton.setActionCommand("EXIT");
         listButton.setActionCommand("LIST");
+        
+        checkbox = new JCheckBox("Network");
+        
 
         exitButton.addActionListener(new ActionListener() {
             @Override
@@ -145,32 +156,10 @@ public class MainMenu extends JFrame {
         panel.add(selectLevelButton);
         panel.add(exitButton);
         panel.add(listButton);
-
+        panel.add(checkbox);
         panel.setBackground(Color.darkGray);
 
         add(panel, BorderLayout.NORTH);
-
-        levelSelction = new LevelSelection(number);
-        levelBox = new JComboBox(levelSelction);
-        levelBox.setSelectedIndex(0);
-
-        levelPane = new JScrollPane(levelBox);
-
-        panel2.add(levelPane, BorderLayout.BEFORE_FIRST_LINE);
-        panel2.add(playButton, BorderLayout.SOUTH);
-        panel2.setBackground(Color.LIGHT_GRAY);
-
-        selectLevelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                panel2.setVisible(true);
-                panel3.setVisible(false);
-                pack();
-            }
-        });
-
-        add(panel2, BorderLayout.SOUTH);
 
         panel2.setVisible(false);
         panel3.setVisible(false);
@@ -180,17 +169,24 @@ public class MainMenu extends JFrame {
     }
 
     /**
-     * adding a listener to the specifed component,
-     * such as playbutton and listbutton
+     * adding a listener to the specifed component, such as playbutton and
+     * listbutton
+     *
      * @param listener listener for components
      */
     public void addListener(ActionListener listener) {
         playButton.addActionListener(listener);
         listButton.addActionListener(listener);
+        selectLevelButton.addActionListener(listener);
+    }
+    
+    public void addItemListener(ItemListener listener){
+        checkbox.addItemListener(listener);
     }
 
     /**
      * gives a selected level in level Box
+     *
      * @return selected level
      */
     public String getLevel() {

@@ -4,14 +4,22 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.IOException;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.Timer;
 import map.GameFrame;
 import menu.GameResults;
+import menu.LevelSelection;
 import menu.MainMenu;
 import menu.Winners;
 
@@ -21,7 +29,7 @@ import menu.Winners;
  *
  * @author marcin and pawel
  */
-public class Controller implements ActionListener {
+public class Controller implements ActionListener, ItemListener {
 
     /**
      * Reference to menu frame
@@ -57,11 +65,21 @@ public class Controller implements ActionListener {
      * possible amount of attemps
      */
     private final int possibleAttemps;
-    
+
     /**
      * attemps number frame
      */
     private JFrame frame;
+    
+    /**
+     * flag that turns network options on
+     */
+    private boolean networkFlag;
+    
+    /**
+     * instance of networkClient class
+     */
+    private NetworkClient networkClient;
 
     /**
      * initialising parameters
@@ -73,7 +91,9 @@ public class Controller implements ActionListener {
         possibleAttemps = 3;
         menu = new MainMenu(passedLev);
         menu.addListener(this);
+        menu.addItemListener(this);
         results = new GameResults();
+        networkFlag = false;
     }
 
     @Override
@@ -115,6 +135,32 @@ public class Controller implements ActionListener {
 
                 menu.pack();
                 break;
+
+            case "SELECT":
+                if(networkFlag==false){
+                    try {
+                    menu.levelSelction = new LevelSelection(passedLev, networkFlag);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                menu.levelBox = new JComboBox(menu.levelSelction);
+                menu.levelBox.setSelectedIndex(0);
+
+                menu.levelPane = new JScrollPane(menu.levelBox);
+
+                menu.panel2.add(menu.levelPane, BorderLayout.BEFORE_FIRST_LINE);
+                menu.panel2.add(menu.playButton, BorderLayout.SOUTH);
+                menu.panel2.setBackground(Color.LIGHT_GRAY);
+                menu.panel2.setVisible(true);
+                menu.panel3.setVisible(false);
+                menu.add(menu.panel2, BorderLayout.SOUTH);
+                menu.pack();
+                }
+                else {
+                    networkClient.requestLevels();
+                }
+                break;
+
             case "EXIT":
                 menu.setVisible(true);
                 game.dispose();
@@ -163,7 +209,6 @@ public class Controller implements ActionListener {
         }
     }
 
-
     /**
      * creating blocade box which closes the program after 2 seconds, or letting
      * player to take one chance more to complete the level
@@ -211,7 +256,7 @@ public class Controller implements ActionListener {
             showBox();
         }
     }
-    
+
     /**
      * box presenting how many attemp's left
      */
@@ -246,5 +291,18 @@ public class Controller implements ActionListener {
             }
         });
         time.start();
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        if(e.getStateChange()==1){
+            networkClient = new NetworkClient();
+            networkFlag = true;  
+            System.out.println(networkFlag);
+        }
+        else{
+            networkFlag = false;
+            System.out.println(networkFlag);
+        }
     }
 }

@@ -29,9 +29,14 @@ public class LevelSelection extends DefaultComboBoxModel {
      */
     protected int passed;
 
-    public LevelSelection(int number) throws IOException {
-        passed = number;
+    public LevelSelection(int number, boolean flag) throws IOException {
+        if(flag == false){
+            passed = number;
         readData();
+        }
+        else{
+            
+        }
     }
 
     /**
