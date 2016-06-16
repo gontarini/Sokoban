@@ -6,6 +6,7 @@ path=path.JPG
 ball=ball.jpg
 hole=hole.jpg
 ballHole=ballHole.jpg
+bullet=bullet.jpg
 0_0=W
 1_0=W
 2_0=W

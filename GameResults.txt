@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 Marcin=1
 Pawel=1
 Kapec=1
 random=2147483647
 Nickname=147
 Nickname2=150
+=======
+Owieczka=500
+>>>>>>> shot
