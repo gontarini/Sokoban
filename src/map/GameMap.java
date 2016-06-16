@@ -58,9 +58,6 @@ public class GameMap extends JPanel implements KeyListener {
     private BufferedImage originalImageBallHole;
 
     /**
-     * flag, which is true if character is standing on the hole
-     */
-    /**
      * configurations of the Panel read from file
      */
     private Board boardMap;
@@ -125,16 +122,22 @@ public class GameMap extends JPanel implements KeyListener {
     protected boolean pcFlag;
 
     /**
-     * constructor
+     * constructor 
      *
-     * @param level
+     * @param levelData variable which is level number for local mode and data for remote mode
+     * @param networkFlag
      */
-    public GameMap(String level) {
-        initialize(level);
+    public GameMap(String levelData, boolean networkFlag) {
+        if(networkFlag == false){
+        initialize(levelData);
+        } else{
+            initializeRemote(levelData);
+        }
     }
+    
 
     /**
-     * load map configurations initialize JPanel object with an image
+     * load map configurations and initialize JPanel object with an image
      *
      * @param level
      */
@@ -146,6 +149,24 @@ public class GameMap extends JPanel implements KeyListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        try {
+            loadImage(boardMap.wallPath, boardMap.characterPath, boardMap.pathPath, boardMap.ballPath, boardMap.holePath, boardMap.ballHolePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        addKeyListener(this);
+    }
+    
+    /**
+     * load remote map configurations and initialize JPanel object with an image
+     * @param data 
+     */
+    private void initializeRemote(String data){
+        boardMap = new Board();
+        
+        boardMap.loadRemote(data);
 
         try {
             loadImage(boardMap.wallPath, boardMap.characterPath, boardMap.pathPath, boardMap.ballPath, boardMap.holePath, boardMap.ballHolePath);
@@ -259,6 +280,10 @@ public class GameMap extends JPanel implements KeyListener {
 
     }
 
+    /**
+     * handling control of the character
+     * @param e event from keyboard
+     */
     @Override
     public void keyPressed(KeyEvent e) {
 
@@ -462,8 +487,15 @@ public class GameMap extends JPanel implements KeyListener {
 
     }
 
+    /**
+     * temporar variable
+     */
     private int i = 1;
 
+    /**
+     * provides animation of the moving items in the board
+     * @param typed event occured from the keyboard
+     */
     private void animate(KeyEvent typed) {
 
         flag = true;
@@ -678,6 +710,10 @@ public class GameMap extends JPanel implements KeyListener {
         timer.start();
     }
     
+    /**
+     * makes game board invisible
+     * @param flag flag to change visibility of the game board
+     */
     private void setVisibility(boolean flag){
         this.setVisible(flag);
     }

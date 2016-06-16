@@ -33,8 +33,7 @@ public class GameResults {
     private Winners winners;
 
     /**
-     * default constructor
-     * initialising winnerList
+     * default constructor initialising winnerList
      */
     public GameResults() {
         winnersList = new ArrayList();
@@ -51,19 +50,20 @@ public class GameResults {
             FileWriter file = new FileWriter(scoresPath, true);
             BufferedWriter out = new BufferedWriter(file);
             String temp = nickname + "=" + score;
-            out.write(temp+"\r\n");
+            out.write(temp + "\r\n");
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    
 
     /**
      * method reads history of the game saved before
      */
     public void readFromFile() {
         winnersList = new ArrayList();
-        
+
         Properties instanceProperties = new Properties();
         try {
             FileInputStream reader = new FileInputStream(scoresPath);
@@ -77,25 +77,54 @@ public class GameResults {
 
         if (!instanceProperties.isEmpty()) {
             Set<String> temp = instanceProperties.stringPropertyNames();
-            
-            for(String instance : temp){
+
+            for (String instance : temp) {
                 System.out.println(instanceProperties.getProperty(instance));
-                
-                winners = new Winners(instance,Integer.valueOf(instanceProperties.getProperty(instance)));
+
+                winners = new Winners(instance, Integer.valueOf(instanceProperties.getProperty(instance)));
                 winnersList.add(winners);
-            }    
+            }
         }
     }
-    
+
+    /**
+     * method reads remote history of the game saved before
+     *
+     * @param data data to read
+     */
+    public void readFromRemoteFile(String data) {
+        winnersList = new ArrayList();
+
+        if (data.length() > 2) {
+            Properties instanceProperties = new Properties();
+            String[] splitSpace = data.split(" ");
+            for (String splitted : splitSpace) {
+                String[] splitEquals = splitted.split("=");
+                instanceProperties.put(splitEquals[0], splitEquals[1]);
+            }
+
+            if (!instanceProperties.isEmpty()) {
+                Set<String> temp = instanceProperties.stringPropertyNames();
+
+                for (String instance : temp) {
+                    System.out.println(instanceProperties.getProperty(instance));
+
+                    winners = new Winners(instance, Integer.valueOf(instanceProperties.getProperty(instance)));
+                    winnersList.add(winners);
+                }
+            }
+        }
+
+    }
+
     /**
      * cleaning game history
      */
-    public void cleanHistory(){
-        try{
+    public void cleanHistory() {
+        try {
             FileOutputStream fos = new FileOutputStream(scoresPath);
             readFromFile();
-        }
-        catch(FileNotFoundException ex){
+        } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }
     }

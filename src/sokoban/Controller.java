@@ -4,14 +4,22 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.IOException;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.Timer;
 import map.GameFrame;
 import menu.GameResults;
+import menu.LevelSelection;
 import menu.MainMenu;
 import menu.Winners;
 
@@ -21,7 +29,7 @@ import menu.Winners;
  *
  * @author marcin and pawel
  */
-public class Controller implements ActionListener {
+public class Controller implements ActionListener, ItemListener {
 
     /**
      * Reference to menu frame
@@ -57,14 +65,24 @@ public class Controller implements ActionListener {
      * possible amount of attemps
      */
     private final int possibleAttemps;
-    
+
     /**
      * attemps number frame
      */
     private JFrame frame;
 
     /**
-     * initialising parameters
+     * flag that turns network options on
+     */
+    private boolean networkFlag;
+
+    /**
+     * instance of networkClient class
+     */
+    private NetworkClient networkClient;
+
+    /**
+     * initializing parameters
      */
     @SuppressWarnings("LeakingThisInConstructor")
     public Controller() {
@@ -73,9 +91,25 @@ public class Controller implements ActionListener {
         possibleAttemps = 3;
         menu = new MainMenu(passedLev);
         menu.addListener(this);
+        menu.addItemListener(this);
         results = new GameResults();
+        networkFlag = false;
     }
 
+    /**
+     * overriding a method which is responsible for handling variaties of events
+     * There is a description of special events below:
+     * 
+     * "PLAY" - event occured by clicked the play button on. It is responsible for turning the game on.
+     * "LIST" - event occured by clicked the list button on. It is responsible for presenting previous game history.
+     * "SELECT" - event occured by clicked the select button on. It is responsible for extending menu options.
+     * "EXIT" - event occured by clicked the exit button on. It closes whole application.
+     * "PAUSE" - event occured by clicked the pause button on. It is responsible for stopping game until the continue button is clicked on.
+     * "CONTINUE" - event occured by clicked the continue button on. It is responsible for resuming stopped game before.
+     * "CONFIRM" - event occured by clicked the confirm button on. It is responsible for saving current score.
+     * "TRY AGAIN" - event occured by clicked the "try again" button on. It lets the player to play once again.
+     * @param e event occured
+     */
     @Override
     @SuppressWarnings("Convert2Lambda")
     public void actionPerformed(ActionEvent e) {
@@ -84,13 +118,27 @@ public class Controller implements ActionListener {
         switch (command) {
             case "PLAY":
                 menu.dispose();
-                game = new GameFrame(menu.getLevel());
-                game.addListener(this);
-                game.setVisible(true);
+                if (networkFlag == false) {
+                    game = new GameFrame(menu.getLevel(), networkFlag);
+                    game.addListener(this);
+                    game.setVisible(true);
+                } else {
+                    networkClient.sendRequest("level " + menu.getLevel());
+                    game = new GameFrame(networkClient.receiveData(), networkFlag);
+                    game.addListener(this);
+                    game.setVisible(true);
+                }
+
                 break;
             case "LIST":
-                results.readFromFile();
-                setHistoryOfTheGameText();
+                if (networkFlag == false) {
+                    results.readFromFile();
+                    setHistoryOfTheGameText();
+                } else {
+                    networkClient.sendRequest("history");
+                    results.readFromRemoteFile(networkClient.receiveData());
+                    setHistoryOfTheGameText();
+                }
 
                 if (menu.cleanerButton == null) {
                     menu.cleanerButton = new JButton();
@@ -115,6 +163,33 @@ public class Controller implements ActionListener {
 
                 menu.pack();
                 break;
+
+            case "SELECT":
+                if (networkFlag == false) {
+                    try {
+                        menu.levelSelction = new LevelSelection(passedLev);
+                    } catch (IOException ex) {
+                        Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                } else {
+                    networkClient.sendRequest("levels");
+                    menu.levelSelction = new LevelSelection(passedLev, networkClient.receiveData());
+                }
+                menu.levelBox = new JComboBox(menu.levelSelction);
+                menu.levelBox.setSelectedIndex(0);
+
+                menu.levelPane = new JScrollPane(menu.levelBox);
+
+                menu.panel2.add(menu.levelPane, BorderLayout.BEFORE_FIRST_LINE);
+                menu.panel2.add(menu.playButton, BorderLayout.SOUTH);
+                menu.panel2.setBackground(Color.LIGHT_GRAY);
+                menu.panel2.setVisible(true);
+                menu.panel3.setVisible(false);
+                menu.add(menu.panel2, BorderLayout.SOUTH);
+                menu.pack();
+                break;
+
             case "EXIT":
                 menu.setVisible(true);
                 game.dispose();
@@ -127,13 +202,21 @@ public class Controller implements ActionListener {
                 game.setGameMapFocused();
                 break;
             case "CONFIRM":
-                results.saveToFile(game.textField.getText(), game.score);
+                if (networkFlag == false) {
+                    results.saveToFile(game.textField.getText(), game.score);
+                }
+                else{
+                    System.out.println("Saved to the remote source");
+                    networkClient.sendRequest("save " + game.textField.getText()+"="+game.score);
+                }
                 game.winner.dispose();
                 passedLev++;
                 numberOfAttemps = 0;
 
                 menu = new MainMenu(passedLev);
+                menu.checkbox.setSelected(networkFlag);
                 menu.addListener(this);
+                menu.addItemListener(this);
                 break;
             case "TRY AGAIN": //3 times to retake level
                 createBox();
@@ -163,10 +246,9 @@ public class Controller implements ActionListener {
         }
     }
 
-
     /**
      * creating blocade box which closes the program after 2 seconds, or letting
-     * player to take one chance more to complete the level
+     * player to take one chance more to complete the level (usage of showBox method)
      */
     @SuppressWarnings("Convert2Lambda")
     private void createBox() {
@@ -204,14 +286,21 @@ public class Controller implements ActionListener {
             numberOfAttemps++;
             game.dispose();
 
-            game = new GameFrame(menu.getLevel());
-            game.addListener(this);
-            game.setVisible(true);
+            if (networkFlag == false) {
+                game = new GameFrame(menu.getLevel(), networkFlag);
+                game.addListener(this);
+                game.setVisible(true);
+            } else {
+                networkClient.sendRequest("level " + menu.getLevel());
+                game = new GameFrame(networkClient.receiveData(), networkFlag);
+                game.addListener(this);
+                game.setVisible(true);
+            }
 
             showBox();
         }
     }
-    
+
     /**
      * box presenting how many attemp's left
      */
@@ -246,5 +335,21 @@ public class Controller implements ActionListener {
             }
         });
         time.start();
+    }
+
+    /**
+     * handling changes from menu checkbox
+     * @param e event appeared
+     */
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        if (e.getStateChange() == 1) {
+            networkClient = new NetworkClient();
+            networkFlag = true;
+        } else {
+            networkFlag = false;
+            networkClient.sendRequest("logout");
+            System.out.println(networkClient.receiveData());
+        }
     }
 }
