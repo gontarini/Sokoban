@@ -58,10 +58,11 @@ public class GameFrame extends JFrame {
     /**
      * constructor
      *
-     * @param level
+     * @param levelData
+     * @param networkFlag
      */
-    public GameFrame(String level) {
-        initialize(level);
+    public GameFrame(String levelData, boolean networkFlag) {
+        initialize(levelData, networkFlag);
     }
 
     /**
@@ -71,11 +72,11 @@ public class GameFrame extends JFrame {
      *
      * @param level particular level to be loaded
      */
-    private void initialize(String level) {
-        gameMap = new GameMap(level);
+    private void initialize(String levelData, boolean networkFlag) {
+        gameMap = new GameMap(levelData, networkFlag);
         scores = new Scores();
 
-        int levelx = Integer.valueOf(level.charAt(0));
+        int levelx = 5;
         scores.setMulitplier(levelx);
         
         gameMap.addAncestorListener(new AncestorListener() {

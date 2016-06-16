@@ -112,6 +112,42 @@ public class Board {
             }
         }
     }
+    
+    /**
+     * loading map configuration from the remote source
+     * @param data remote data
+     */
+    public void loadRemote(String data){
+        
+        Properties instanceProperties = new Properties();
+        String[] splitSpace = data.split(" ");
+        for (String splitted : splitSpace) {
+            String[] splitEquals = splitted.split("=");
+            instanceProperties.put(splitEquals[0], splitEquals[1]);
+        }
+        
+        boardWidth = Integer.parseInt(instanceProperties.getProperty("width"));
+        boardHeight = Integer.parseInt(instanceProperties.getProperty("height"));
+        wallPath = instanceProperties.getProperty("wall");
+        characterPath = instanceProperties.getProperty("character");
+        pathPath = instanceProperties.getProperty("path");
+        ballPath = instanceProperties.getProperty("ball");
+        holePath = instanceProperties.getProperty("hole");
+        endPath = instanceProperties.getProperty("end");
+        ballHolePath = instanceProperties.getProperty("ballHole");
+        bulletPath = instanceProperties.getProperty("bullet");
+        
+        mapTable = new String[boardHeight][boardWidth];
+
+        for (int i = 0; i < boardHeight; i++) {
+            for (int j = 0; j < boardWidth; j++) {
+                mapTable[i][j] = instanceProperties.getProperty(i + "_" + j);
+                if ("B".equals(mapTable[i][j])) {
+                    ballNumber++;
+                }
+            }
+        }
+    }
 
     /**
      * creator of simple map
